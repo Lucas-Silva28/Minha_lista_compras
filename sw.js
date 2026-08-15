@@ -1,40 +1,21 @@
-const CACHE_NAME='minha-lista-cache-v3.1.0';
+const CACHE_NAME='minha-lista-cache-v3.1.3';
 const APP_SHELL=['./','./index.html','./manifest.json','./sw.js','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(APP_SHELL)));
+  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)));
   // A NOVA VERSÃO FICA AGUARDANDO ATÉ O USUÁRIO ESCOLHER "ATUALIZAR AGORA".
 });
-
 self.addEventListener('activate',event=>{
-  event.waitUntil(
-    caches.keys().then(keys=>Promise.all(
-      keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k))
-    )).then(()=>self.clients.claim())
-  );
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
 });
-
-self.addEventListener('message',event=>{
-  if(event.data?.type==='SKIP_WAITING') self.skipWaiting();
-});
-
+self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting();});
 self.addEventListener('fetch',event=>{
-  if(event.request.method!=='GET') return;
-  const url=new URL(event.request.url);
-  if(url.origin!==location.origin) return;
-
-  // VERSION.JSON PRECISA SER CONSULTADO NA REDE PARA DETECTAR NOVAS VERSÕES.
+  if(event.request.method!=='GET')return;
+  const url=new URL(event.request.url);if(url.origin!==location.origin)return;
   if(url.pathname.endsWith('/version.json')){
-    event.respondWith(fetch(event.request,{cache:'no-store'}).catch(()=>caches.match('./version.json')));
-    return;
+    event.respondWith(fetch(event.request,{cache:'no-store'}).catch(()=>caches.match('./version.json')));return;
   }
-
-  // APP SHELL: CACHE-FIRST. ISSO IMPEDE QUE O APP TROQUE DE VERSÃO SOZINHO.
-  event.respondWith(
-    caches.match(event.request).then(cached=>cached || fetch(event.request).then(res=>{
-      const copy=res.clone();
-      caches.open(CACHE_NAME).then(c=>c.put(event.request,copy));
-      return res;
-    }))
-  );
+  event.respondWith(caches.match(event.request).then(cached=>cached||fetch(event.request).then(response=>{
+    if(response&&response.ok){const copy=response.clone();caches.open(CACHE_NAME).then(cache=>cache.put(event.request,copy));}return response;
+  })));
 });
