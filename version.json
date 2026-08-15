@@ -1,7 +1,7 @@
 {
-  "version":"3.0.0",
-  "minimumVersion":"3.0.0",
-  "releaseDate":"2026-08-15",
-  "notes":"Novo histórico de compras, catálogo inteligente com último preço, painel mensal, backup protegido, exportação CSV, conta preparada para Firebase, PWA corrigida e atualização controlada.",
-  "forceUpdate":false
+  "version": "3.1.0",
+  "minimumVersion": "3.0.0",
+  "releaseDate": "2026-08-15",
+  "notes": "Minha Lista Inteligente: sugestões de recompra, alertas de preço baseados no histórico, produtos frequentes, tutorial animado, versão no rodapé, área Minha Conta, login Google preparado para Firebase e sincronização com conta.",
+  "forceUpdate": false
 }
