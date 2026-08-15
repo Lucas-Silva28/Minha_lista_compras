@@ -1,14 +1,9 @@
-// CONFIGURACAO OPCIONAL DO FIREBASE PARA CONTA GOOGLE + FIRESTORE.
-// NAO COLOQUE CHAVES PRIVADAS, SERVICE ACCOUNT OU SENHAS NESTE ARQUIVO.
-// O firebaseConfig DA WEB PODE SER PUBLICO; A PROTECAO REAL FICA NAS REGRAS DO FIRESTORE.
-window.MINHA_LISTA_FIREBASE_CONFIG = null;
-
-// EXEMPLO:
-// window.MINHA_LISTA_FIREBASE_CONFIG = {
-//   apiKey: "SUA_API_KEY",
-//   authDomain: "SEU-PROJETO.firebaseapp.com",
-//   projectId: "SEU-PROJETO",
-//   storageBucket: "SEU-PROJETO.appspot.com",
-//   messagingSenderId: "SEU_SENDER_ID",
-//   appId: "SEU_APP_ID"
-// };
+window.MINHA_LISTA_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBA8xfkCYf6a32rZBh8KtiazCoG7kuNQMo",
+  authDomain: "minha-lista-koda.firebaseapp.com",
+  projectId: "minha-lista-koda",
+  storageBucket: "minha-lista-koda.firebasestorage.app",
+  messagingSenderId: "612515936266",
+  appId: "1:612515936266:web:0ce4a3718821df2b7f87f3",
+  measurementId: "G-K68Z39RS0X"
+};
