@@ -1,7 +1,5 @@
 {
-  "version": "3.1.1",
-  "minimumVersion": "3.0.0",
-  "releaseDate": "2026-08-15",
-  "notes": "Correções no login Google, mensagens, tutorial e atualização; melhorias nas sugestões inteligentes e segurança de sincronização.",
-  "forceUpdate": false
+  "version": "3.1.2",
+  "name": "Minha Lista Koda",
+  "notes": "Categorias personalizadas, campos com X, entrada monetária e correções de exclusão."
 }
