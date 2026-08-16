@@ -1,5 +1,17 @@
 {
-  "version": "3.1.3",
+  "version": "3.1.6",
   "name": "Minha Lista Koda",
-  "notes": "Correção do sistema de atualização PWA e instalação do aplicativo."
+  "mandatory": false,
+  "title": "Nova versão disponível",
+  "message": "Configuração Firebase integrada ao sistema, login Google alinhado ao sistema de referência e tutorial ampliado.",
+  "releaseDate": "2026-08-16",
+  "changelog": [
+    "Configuração pública do Firebase incorporada diretamente no index.html.",
+    "Removida a dependência do arquivo firebase-config.js.",
+    "SDK Firebase alinhado à versão 12.17.1 usada no sistema de referência.",
+    "Login Google, persistência local e confirmação da conta mantidos no fluxo Firebase.",
+    "Tutorial ampliado com explicações práticas de lista, valores, categorias, conta, backup, sincronização, instalação e atualização.",
+    "APP_VERSION, version.json e Service Worker alinhados na versão 3.1.6.",
+    "Removida inicialização duplicada da aplicação no evento load."
+  ]
 }
