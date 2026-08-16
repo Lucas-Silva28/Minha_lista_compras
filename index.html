@@ -54,7 +54,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore-compat.js"></script>
 <script>
-const APP_VERSION='3.1.9';
+const APP_VERSION='3.1.10';
 // CONFIGURACAO WEB PUBLICA DO FIREBASE — NAO CONTEM CHAVES PRIVADAS.
 const FIREBASE_CONFIG={
  apiKey:'AIzaSyBA8xfkCYf6a32rZBh8KtiazCoG7kuNQMo',
@@ -326,4 +326,36 @@ window.addEventListener('load',async()=>{$('footerVersion').textContent='v'+APP_
 
 $('budget').addEventListener('input',e=>{data.budget=parseMoney(e.target.value);persist();renderList()});$('search').addEventListener('input',renderList);$('historySearch').addEventListener('input',renderHistory);$('catalogSearch').addEventListener('input',renderCatalog);document.addEventListener('click',e=>{if(!e.target.closest('.field'))$('suggestions').hidden=true});
 </script>
-<script id="v314-input-enhancements">(function(){const MONEY=new Set(['prodPrice','prodPromo','budget']);function addClear(i){if(i.dataset.clearWrapped||i.type==='hidden'||i.disabled||i.readOnly)return;if(!['text','search','email','tel','url','number'].includes(i.type))return;const w=document.createElement('span');w.className='inputClearWrap';i.parentNode.insertBefore(w,i);w.appendChild(i);const b=document.createElement('button');b.type='button';b.className='inputClearBtn';b.textContent='×';b.setAttribute('aria-label','Limpar campo');b.onclick=()=>{i.value='';i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));i.focus()};w.appendChild(b);i.dataset.clearWrapped='1'}function addMoney(i){if(!MONEY.has(i.id)||i.dataset.moneyReady)return;i.dataset.moneyReady='1';i.type='text';i.inputMode='numeric';i.setAttribute('pattern','[0-9]*');i.classList.add('moneyInput');i.addEventListener('input',function(){let raw=this.value.replace(/\D/g,'');if(!raw){this.value='';return}raw=raw.replace(/^0+(?=\d)/,'');if(raw.length===1)raw='0'+raw;this.value=(raw.slice(0,-2)||'0')+','+raw.slice(-2)})}function scan(){document.querySelectorAll('input').forEach(i=>{addClear(i);addMoney(i)})}window.addEventListener('DOMContentLoaded',()=>{scan();new MutationObserver(scan).observe(document.body,{childList:true,subtree:true})})})();</script></body></html>
+<script id="v314-input-enhancements">(function(){const MONEY=new Set(['prodPrice','prodPromo','budget']);function addClear(i){if(i.dataset.clearWrapped||i.type==='hidden'||i.disabled||i.readOnly)return;if(!['text','search','email','tel','url','number'].includes(i.type))return;const w=document.createElement('span');w.className='inputClearWrap';i.parentNode.insertBefore(w,i);w.appendChild(i);const b=document.createElement('button');b.type='button';b.className='inputClearBtn';b.textContent='×';b.setAttribute('aria-label','Limpar campo');b.onclick=()=>{i.value='';i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));i.focus()};w.appendChild(b);i.dataset.clearWrapped='1'}function addMoney(i){if(!MONEY.has(i.id)||i.dataset.moneyReady)return;i.dataset.moneyReady='1';i.type='text';i.inputMode='numeric';i.setAttribute('pattern','[0-9]*');i.classList.add('moneyInput');i.addEventListener('input',function(){let raw=this.value.replace(/\D/g,'');if(!raw){this.value='';return}raw=raw.replace(/^0+(?=\d)/,'');if(raw.length===1)raw='0'+raw;this.value=(raw.slice(0,-2)||'0')+','+raw.slice(-2)})}function scan(){document.querySelectorAll('input').forEach(i=>{addClear(i);addMoney(i)})}window.addEventListener('DOMContentLoaded',()=>{scan();new MutationObserver(scan).observe(document.body,{childList:true,subtree:true})})})();</script>
+<script>
+// DIAGNOSTICO TEMPORARIO DO LOGIN GOOGLE - v3.1.10
+(function(){
+  function showGoogleDiagnostic(error, source){
+    try {
+      const code = error && error.code ? error.code : 'SEM_CODIGO';
+      const message = error && error.message ? error.message : String(error || 'Erro desconhecido');
+      const details = [
+        'ORIGEM: ' + (source || 'desconhecida'),
+        'CODIGO: ' + code,
+        'MENSAGEM: ' + message,
+        'DOMINIO: ' + location.origin,
+        'HOST: ' + location.host,
+        'URL: ' + location.href
+      ].join('\\n');
+      console.error('[MINHA LISTA] ERRO GOOGLE', {code, message, source, error});
+      let box=document.getElementById('googleDiagnosticBox');
+      if(!box){
+        box=document.createElement('div');
+        box.id='googleDiagnosticBox';
+        box.style.cssText='position:fixed;z-index:999999;left:12px;right:12px;bottom:12px;background:#fff;border:2px solid #dc2626;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);font:14px/1.45 system-ui,sans-serif;color:#111;max-height:70vh;overflow:auto;white-space:pre-wrap;';
+        document.body.appendChild(box);
+      }
+      box.innerHTML='<strong style="color:#b91c1c">ERRO REAL DO LOGIN GOOGLE</strong><br><br>'+details.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\\n/g,'<br>')+'<br><br><button id="copyGoogleDiagnostic" style="padding:10px 14px;border:0;border-radius:10px;background:#111;color:#fff">Copiar diagnóstico</button>';
+      const btn=document.getElementById('copyGoogleDiagnostic');
+      if(btn) btn.onclick=()=>navigator.clipboard?.writeText(details).then(()=>btn.textContent='Copiado!');
+    } catch(e){ console.error('Falha ao exibir diagnóstico',e); }
+  }
+  window.__showGoogleDiagnostic=showGoogleDiagnostic;
+})();
+</script>
+</body></html>
