@@ -1,17 +1,1 @@
-{
-  "version": "3.1.7",
-  "name": "Minha Lista Koda",
-  "mandatory": false,
-  "title": "Nova versão disponível",
-  "message": "Correção definitiva do estado da conta Google e autenticação alinhada ao fluxo do OPT TAG PRO.",
-  "releaseDate": "2026-08-16",
-  "changelog": [
-    "Estado da conta Google controlado pelo onAuthStateChanged.",
-    "Login principal usando signInWithPopup e persistência LOCAL.",
-    "Sessão existente recuperada automaticamente ao abrir o sistema.",
-    "Conta conectada é exibida antes da sincronização para não mascarar o login.",
-    "Erros de autenticação tratados e exibidos ao usuário.",
-    "Configuração pública do Firebase permanece incorporada no index.html.",
-    "APP_VERSION, version.json e Service Worker alinhados na versão 3.1.7."
-  ]
-}
+{"version":"3.1.9","date":"2026-08-16","notes":"Correção definitiva do fluxo de autenticação Google; estado da conta separado da sincronização; fallback mobile."}

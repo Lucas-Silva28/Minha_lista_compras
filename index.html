@@ -54,7 +54,7 @@
 <script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore-compat.js"></script>
 <script>
-const APP_VERSION='3.1.8';
+const APP_VERSION='3.1.9';
 // CONFIGURACAO WEB PUBLICA DO FIREBASE — NAO CONTEM CHAVES PRIVADAS.
 const FIREBASE_CONFIG={
  apiKey:'AIzaSyBA8xfkCYf6a32rZBh8KtiazCoG7kuNQMo',
@@ -149,95 +149,115 @@ function openFirebaseHelp(){openModal('🔥 Configuração do Firebase','<p>1. C
 async function syncNow(){if(!cloud.user||!cloud.db){toast('Conecte uma conta primeiro.','warn');setAccountFeedback('Nenhuma conta Google está conectada no momento.','warn');return}setAccountFeedback('Sincronizando seus dados com o Firebase...','info');const ok=await saveCloud();if(ok){toast('Sincronização concluída com sucesso.','ok');setAccountFeedback('Conta conectada e dados sincronizados com sucesso.','ok')}else{setAccountFeedback('A conta está conectada, mas a sincronização falhou. Seus dados locais foram preservados.','danger')}renderAccount()}
 function toggleTheme(){const d=document.body;d.dataset.theme=d.dataset.theme==='dark'?'light':'dark';$('themeBtn').textContent=d.dataset.theme==='dark'?'🌙':'☀️';localStorage.setItem('minha_lista_theme',d.dataset.theme)}
 function firebaseErrorMessage(e){const code=e?.code||'';const map={'auth/unauthorized-domain':'Este domínio não está autorizado no Firebase. Adicione o domínio do Vercel em Authentication → Configurações → Domínios autorizados.','auth/popup-blocked':'O navegador bloqueou a janela de login. Tente novamente.','auth/popup-closed-by-user':'A janela do Google foi fechada antes da conclusão do login.','auth/cancelled-popup-request':'Outra tentativa de login já está em andamento.','auth/network-request-failed':'Falha de conexão com a internet.','auth/operation-not-allowed':'O login com Google não está ativado no Firebase.','auth/invalid-api-key':'A configuração do Firebase está inválida.','auth/invalid-continue-uri':'A URL de retorno do login não foi aceita pelo Firebase.','auth/internal-error':'O Firebase retornou um erro interno durante o login.','auth/invalid-credential':'A credencial do Google não foi aceita. Tente novamente.','auth/account-exists-with-different-credential':'Já existe uma conta usando este e-mail com outro método de login.'};return map[code]||`Não foi possível concluir o login Google${code?` (${code})`:''}. Verifique o console do navegador se o problema continuar.`}
-function handleAuthUser(u,source='auth-state'){
- cloud.user=u||null;
- cloud.loginPending=false;
- if(u){
-  if(cloud.lastHandledUid===u.uid && source!=='popup') return;
-  cloud.lastHandledUid=u.uid;
-  sessionStorage.removeItem('minha_lista_login_pending');
-  setAccountFeedback(`Conta Google conectada: ${u.displayName||u.email||'usuário Google'}.`,'ok');
-  toast('Conta Google conectada com sucesso.','ok');
-  renderAccount();
-  renderBackup();
-  // LOGIN E SINCRONIZAÇÃO SÃO ETAPAS INDEPENDENTES.
-  // UM ERRO NO FIRESTORE NUNCA PODE TRANSFORMAR UM LOGIN VÁLIDO EM ERRO DE LOGIN.
-  syncAfterLogin().then(ok=>{
-   if(ok)setAccountFeedback('Conta conectada e dados sincronizados com sucesso.','ok');
-   else setAccountFeedback('Conta conectada. A sincronização com a nuvem falhou, mas seus dados locais foram preservados.','warn');
-   renderAccount();
-  }).catch(e=>{
-   console.warn('Post-login sync',e);
-   setAccountFeedback('Conta conectada. A sincronização ficará pendente; seus dados locais foram preservados.','warn');
-   renderAccount();
-  });
- }else{
-  cloud.lastHandledUid=null;
-  sessionStorage.removeItem('minha_lista_login_pending');
-  renderBackup();
-  renderAccount();
- }
-}
-async function setupFirebase(){
- if(!FIREBASE_CONFIG||!window.firebase){
-  cloud.enabled=false;
-  setAccountFeedback('Firebase não está disponível neste momento.','danger');
-  renderAccount();
-  return;
- }
- try{
-  if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-  cloud.db=firebase.firestore();
-  cloud.auth=firebase.auth();
-  cloud.enabled=true;
-  await cloud.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+async function handleAuthUser(u,source='auth-state') {
+  cloud.user = u || null;
+  cloud.loginPending = false;
 
-  // O FIREBASE AUTH É A FONTE OFICIAL DO ESTADO DA CONTA.
-  cloud.auth.onAuthStateChanged(user=>{
-   try{ handleAuthUser(user,'auth-state'); }
-   catch(e){
-    console.error('Minha Lista: erro no estado de autenticação',e);
-    setAccountFeedback('O login foi concluído, mas houve um erro ao atualizar a interface. Recarregue a página.','danger');
+  if (u) {
+    cloud.lastHandledUid = u.uid;
+    sessionStorage.removeItem('minha_lista_login_pending');
+
+    // A AUTENTICACAO TERMINA AQUI. O FIRESTORE NAO PODE TRANSFORMAR LOGIN BEM-SUCEDIDO EM ERRO.
+    setAccountFeedback(`Conta Google conectada: ${u.displayName || u.email || 'usuário Google'}.`, 'ok');
+    toast('Conta Google conectada com sucesso.', 'ok');
     renderAccount();
-   }
-  });
+    renderBackup();
 
-  renderAccount();
- }catch(e){
-  console.error('Firebase initialization',e);
-  cloud.enabled=false;
-  const msg=firebaseErrorMessage(e);
-  setAccountFeedback(msg,'danger');
-  renderAccount();
- }
+    // SINCRONIZACAO E UMA ETAPA SEPARADA E NAO BLOQUEANTE.
+    Promise.resolve().then(() => syncAfterLogin()).then(ok => {
+      if (ok) {
+        setAccountFeedback('Conta conectada e dados sincronizados com sucesso.', 'ok');
+      } else {
+        setAccountFeedback('Conta conectada. A sincronização com a nuvem falhou, mas seus dados locais foram preservados.', 'warn');
+      }
+      renderAccount();
+    }).catch(e => {
+      console.warn('Sync após autenticação', e);
+      setAccountFeedback('Conta conectada. A sincronização ficará pendente.', 'warn');
+      renderAccount();
+    });
+  } else {
+    cloud.lastHandledUid = null;
+    sessionStorage.removeItem('minha_lista_login_pending');
+    renderBackup();
+    renderAccount();
+  }
 }
-async function login(){
- if(!cloud.enabled||!cloud.auth){
-  toast('A conexão com o Firebase ainda não está pronta.','danger');
-  setAccountFeedback('O Firebase ainda está inicializando. Tente novamente em alguns segundos.','danger');
-  return;
- }
- if(cloud.loginPending)return;
- const provider=new firebase.auth.GoogleAuthProvider();
- provider.setCustomParameters({prompt:'select_account'});
- cloud.loginPending=true;
- sessionStorage.setItem('minha_lista_login_pending','1');
- setAccountFeedback('Abrindo o Google para escolher sua conta...','info');
- renderAccount();
- try{
-  await cloud.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-  // SOMENTE INICIA A AUTENTICAÇÃO. O onAuthStateChanged CONFIRMA A CONEXÃO.
-  await cloud.auth.signInWithPopup(provider);
-  // NÃO CHAMAR syncAfterLogin AQUI. A AUTENTICAÇÃO E A SINCRONIZAÇÃO SÃO INDEPENDENTES.
- }catch(e){
-  console.error('Google login',e);
-  cloud.loginPending=false;
-  sessionStorage.removeItem('minha_lista_login_pending');
-  const msg=firebaseErrorMessage(e);
-  setAccountFeedback(msg,'danger');
-  toast(msg,'danger');
+async function setupFirebase() {
+  if (!FIREBASE_CONFIG || !window.firebase) {
+    cloud.enabled = false;
+    setAccountFeedback('Firebase não está disponível neste momento.', 'danger');
+    renderAccount();
+    return;
+  }
+
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    cloud.db = firebase.firestore();
+    cloud.auth = firebase.auth();
+    cloud.enabled = true;
+
+    await cloud.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+    // O OBSERVER E A UNICA FONTE OFICIAL DO ESTADO DA CONTA.
+    cloud.auth.onAuthStateChanged(user => {
+      handleAuthUser(user, 'auth-state').catch(e => {
+        console.error('Erro no estado de autenticação', e);
+        setAccountFeedback('A conta foi autenticada, mas houve um erro ao atualizar a interface.', 'danger');
+        renderAccount();
+      });
+    });
+
+    renderAccount();
+  } catch (e) {
+    console.error('Firebase initialization', e);
+    cloud.enabled = false;
+    const msg = firebaseErrorMessage(e);
+    setAccountFeedback(msg, 'danger');
+    renderAccount();
+  }
+}
+async function login() {
+  if (!cloud.enabled || !cloud.auth) {
+    toast('A conexão com o Firebase ainda não está pronta.', 'danger');
+    setAccountFeedback('O Firebase ainda está inicializando. Tente novamente em alguns segundos.', 'danger');
+    return;
+  }
+  if (cloud.loginPending) return;
+
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  cloud.loginPending = true;
+  sessionStorage.setItem('minha_lista_login_pending', '1');
+  setAccountFeedback('Abrindo o Google para escolher sua conta...', 'info');
   renderAccount();
- }
+
+  try {
+    await cloud.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    // O POPUP APENAS INICIA O LOGIN. O onAuthStateChanged CONFIRMA A SESSAO.
+    await cloud.auth.signInWithPopup(provider);
+    // NAO CHAMAR handleAuthUser AQUI. ISSO EVITA DUPLO PROCESSAMENTO E IMPEDE QUE UM ERRO DE FIRESTORE PARECA ERRO DE LOGIN.
+  } catch (e) {
+    console.error('Google login', e);
+
+    // Em celulares, alguns navegadores bloqueiam popup. Nesse caso, tenta redirect.
+    if (e?.code === 'auth/popup-blocked' || e?.code === 'auth/cancelled-popup-request') {
+      try {
+        setAccountFeedback('O navegador bloqueou a janela. Redirecionando para o Google...', 'info');
+        await cloud.auth.signInWithRedirect(provider);
+        return;
+      } catch (redirectError) {
+        e = redirectError;
+      }
+    }
+
+    cloud.loginPending = false;
+    sessionStorage.removeItem('minha_lista_login_pending');
+    const msg = firebaseErrorMessage(e);
+    setAccountFeedback(msg, 'danger');
+    toast(msg, 'danger');
+    renderAccount();
+  }
 }
 async function logout(){try{await cloud.auth.signOut();cloud.user=null;cloud.lastSync=null;setAccountFeedback('Conta desconectada. Seus dados locais continuam neste aparelho.','warn');toast('Conta desconectada.','warn');renderBackup();renderAccount()}catch(e){toast('Não foi possível desconectar a conta.','danger')}}
 function openTutorial(){const m=$('tutorialModal');m.classList.add('open');const sc=$('tutorialScroll');const bar=$('tutorialProgressBar');const steps=[...sc.querySelectorAll('.tutorialStep')];const update=()=>{const max=sc.scrollHeight-sc.clientHeight;bar.style.width=(max>0?Math.min(100,(sc.scrollTop/max)*100):100)+'%'};sc.onscroll=update;steps.forEach(step=>step.classList.remove('visible'));if('IntersectionObserver' in window){if(sc._tutorialObserver)sc._tutorialObserver.disconnect();sc._tutorialObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')}),{root:sc,threshold:.22}) ;steps.forEach(step=>sc._tutorialObserver.observe(step))}else{steps.forEach(step=>step.classList.add('visible'))}update()}
