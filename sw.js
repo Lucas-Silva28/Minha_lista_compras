@@ -1,6 +1,6 @@
-// MINHA LISTA KODA — SERVICE WORKER / PWA v3.1.6
+// MINHA LISTA KODA — SERVICE WORKER / PWA v3.1.7
 // NOVO CACHE A CADA RELEASE. DADOS DO USUÁRIO FICAM FORA DO CACHE.
-const CACHE_NAME='minha-lista-cache-v3.1.6';
+const CACHE_NAME='minha-lista-cache-v3.1.7';
 const APP_SHELL=['./','./index.html','./manifest.json','./sw.js','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('install',event=>{
