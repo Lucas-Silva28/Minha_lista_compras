@@ -223,7 +223,7 @@ body{min-width:0}
   <div id="category-chart-box" style="display:none"><div id="category-bars"></div></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 
@@ -248,7 +248,6 @@ try {
     window.firebaseStorageRef=ref; window.firebaseUploadString=uploadString; window.firebaseGetDownloadURL=getDownloadURL;
     window.googleProvider=new GoogleAuthProvider();
     window.firebaseReady=true;
-    getRedirectResult(window.firebaseAuth).catch(err=>console.warn("Google redirect:",err));
     onAuthStateChanged(window.firebaseAuth, user=>window.handleFirebaseUser?.(user));
   }
 } catch(err){ console.error("Firebase init:",err); }
@@ -256,6 +255,10 @@ try {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
+      function escapeHtml(value){
+        return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\'/g,'&#039;');
+      }
+
       let appData = {
         categories: ["Básico", "Limpeza", "Verduras", "Eletros"],
         items: [],
@@ -1390,10 +1393,14 @@ try {
             await signOut(window.firebaseAuth);
             showToast('Conta Google desconectada.');
           }else{
-            // Redirecionamento é mais adequado para dispositivos móveis.
-            await signInWithRedirect(window.firebaseAuth, window.googleProvider);
+            await signInWithPopup(window.firebaseAuth, window.googleProvider);
           }
-        }catch(err){console.error(err);showToast('Não foi possível conectar a conta Google.','danger');}
+        }catch(err){
+          console.error('Google Auth:', err);
+          const code = err?.code || 'erro-desconhecido';
+          const message = err?.message || String(err);
+          openCustomModal('🔴 Erro ao conectar Google', `<div style=\"line-height:1.5;font-size:13px\"><p><b>Código:</b> ${escapeHtml(code)}</p><p style=\"margin-top:8px\"><b>Mensagem:</b> ${escapeHtml(message)}</p></div>`, [{text:'Fechar',className:'btn btn-primary btn-sm'}]);
+        }
       }
 
       async function forceCloudSync(){
