@@ -1,361 +1,1448 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0ea5e9">
-<meta name="description" content="Minha Lista — lista de compras inteligente, histórico, orçamento, backup e sincronização.">
-<link rel="manifest" href="./manifest.json">
-<title>MINHA LISTA • Koda Sistemas</title>
-<style>
-:root{--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec;--primary:#0ea5e9;--primary2:#0284c7;--ok:#16a34a;--warn:#f59e0b;--danger:#dc2626;--shadow:0 8px 28px rgba(16,24,40,.07);--radius:18px}
-[data-theme=dark]{--bg:#0b1220;--card:#111a2b;--text:#f3f6fb;--muted:#9aa7ba;--line:#263248;--shadow:0 8px 28px rgba(0,0,0,.25)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:96px}button,input,select{font:inherit}button{border:0;cursor:pointer}.app{max-width:900px;margin:auto}.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 16px}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:13px;object-fit:cover;background:#0ea5e9}.brand b{font-size:1.05rem}.brand small{display:block;color:var(--muted);font-size:.72rem;margin-top:2px}.actions{display:flex;gap:6px}.iconbtn{width:42px;height:42px;border-radius:12px;background:var(--bg);color:var(--text);border:1px solid var(--line)}.nav{display:flex;gap:6px;overflow:auto;margin-top:10px;padding-bottom:2px}.nav button{white-space:nowrap;padding:9px 12px;border-radius:11px;background:var(--bg);color:var(--muted);border:1px solid var(--line);font-weight:700;font-size:.82rem}.nav button.active{background:var(--primary);color:#fff;border-color:var(--primary)}main{padding:16px}.view{display:none}.view.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}h2,h3{margin:0 0 12px}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--bg)}.stat small{display:block;color:var(--muted);font-size:.72rem}.stat strong{display:block;font-size:1.12rem;margin-top:4px}.field{margin-bottom:11px;position:relative}.field label{display:block;color:var(--muted);font-size:.78rem;font-weight:800;margin-bottom:5px}.field input,.field select{width:100%;min-height:46px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--text);outline:none}.field input:focus,.field select:focus{border-color:var(--primary)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{min-height:44px;padding:10px 14px;border-radius:12px;font-weight:800}.primary{background:var(--primary);color:#fff}.secondary{background:var(--bg);color:var(--text);border:1px solid var(--line)}.success{background:var(--ok);color:#fff}.warning{background:var(--warn);color:#111}.danger{background:var(--danger);color:#fff}.full{width:100%}.suggestions{position:absolute;left:0;right:0;top:74px;z-index:15;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}.suggestion{padding:11px 12px;border-bottom:1px solid var(--line);cursor:pointer}.suggestion:last-child{border-bottom:0}.suggestion b{display:block}.suggestion span{font-size:.74rem;color:var(--muted)}.item{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}.check{width:24px;height:24px;accent-color:var(--ok)}.itemmain{flex:1;min-width:0}.itemmain b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.itemmain small{color:var(--muted)}.money{font-weight:900}.tag{display:inline-flex;padding:3px 7px;border-radius:999px;font-size:.68rem;font-weight:900;background:#e0f2fe;color:#0369a1;margin-left:5px}.darktag{background:#25344e;color:#c9d7ef}.progress{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:var(--primary);transition:.25s}.listrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 0;border-bottom:1px solid var(--line)}.listrow:last-child{border:0}.empty{text-align:center;padding:28px;color:var(--muted)}.history-card{cursor:pointer}.history-card strong{font-size:1rem}.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--primary)}.toastwrap{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;gap:8px;width:min(92%,380px)}.toast{background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:var(--shadow);padding:12px 14px;border-radius:13px;font-weight:800;display:flex;align-items:flex-start;gap:9px;line-height:1.35;opacity:0;transform:translateY(-8px);animation:toastIn .22s ease forwards}.toast.ok{border-left:4px solid var(--ok)}.toast.warn{border-left:4px solid var(--warn)}.toast.danger{border-left:4px solid var(--danger)}.toastIcon{flex:0 0 auto;font-size:1.05rem}.toastText{min-width:0}@keyframes toastIn{to{opacity:1;transform:translateY(0)}}.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:90}.modal.open{display:flex}.modalbox{width:min(100%,520px);max-height:90vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 24px 80px rgba(0,0,0,.25)}.modalactions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.bottom{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--card);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:space-between;align-items:center}.bottom strong{font-size:1.15rem}.pulse{animation:pulse .5s}@keyframes pulse{50%{transform:scale(1.03)}}
-.tutorialHero{position:relative;overflow:hidden;background:linear-gradient(135deg,#e0f2fe,#f8fafc 55%,#dbeafe);border:1px solid var(--line)}[data-theme=dark] .tutorialHero{background:linear-gradient(135deg,#10253b,#111a2b 55%,#142c49)}
-.floatEmoji{position:absolute;font-size:1.5rem;animation:floatEmoji 4s ease-in-out infinite;pointer-events:none}.floatEmoji.e1{left:8%;top:18%}.floatEmoji.e2{right:10%;top:25%;animation-delay:1s}.floatEmoji.e3{left:18%;bottom:12%;animation-delay:2s}.floatEmoji.e4{right:20%;bottom:10%;animation-delay:3s}@keyframes floatEmoji{0%,100%{transform:translateY(0) rotate(-4deg);opacity:.75}50%{transform:translateY(-12px) rotate(6deg);opacity:1}}
-.smartPulse{animation:smartPulse 2.8s ease-in-out infinite}@keyframes smartPulse{0%,100%{box-shadow:0 0 0 0 rgba(14,165,233,.05)}50%{box-shadow:0 0 0 8px rgba(14,165,233,.08)}}
-.tutorialStep{padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--bg);margin-bottom:10px;animation:stepIn .7s ease both}.tutorialStep:nth-child(2){animation-delay:.08s}.tutorialStep:nth-child(3){animation-delay:.16s}.tutorialStep:nth-child(4){animation-delay:.24s}.tutorialStep:nth-child(5){animation-delay:.32s}.tutorialStep:nth-child(6){animation-delay:.4s}@keyframes stepIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.tutorialScroll{max-height:52vh;overflow:auto;padding-right:4px;scrollbar-width:thin;scrollbar-color:var(--primary) var(--line)}.tutorialScroll::-webkit-scrollbar{width:9px}.tutorialScroll::-webkit-scrollbar-track{background:var(--line);border-radius:99px}.tutorialScroll::-webkit-scrollbar-thumb{background:linear-gradient(var(--primary),#38bdf8);border-radius:99px}.tutorialProgress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 16px}.tutorialProgress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),#38bdf8);transition:width .2s}
-.accountStatus{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border-radius:13px;border:1px solid var(--line);background:var(--bg);margin-top:12px;font-size:.84rem;line-height:1.4}.accountStatus.ok{border-left:4px solid var(--ok)}.accountStatus.warn{border-left:4px solid var(--warn)}.accountStatus.danger{border-left:4px solid var(--danger)}.accountStatus.info{border-left:4px solid var(--primary)}.tutorialStep.reveal{opacity:0;transform:translateY(22px) scale(.985);transition:opacity .55s ease,transform .55s ease}.tutorialStep.reveal.visible{opacity:1;transform:translateY(0) scale(1)}.tutorialStep.visible .stepIcon{animation:stepIconPop .55s ease both}@keyframes stepIconPop{from{transform:scale(.7) rotate(-8deg);opacity:.2}to{transform:scale(1) rotate(0);opacity:1}}.accountAvatar{width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid var(--primary);background:var(--bg)}.smartGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.smartCard{border:1px solid var(--line);border-radius:15px;padding:13px;background:var(--bg)}.smartCard b{display:block;margin-bottom:5px}.smartCard small{color:var(--muted);line-height:1.45}@media(max-width:560px){.smartGrid{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}@media(min-width:700px){main{padding:22px 0}.grid.three{grid-template-columns:repeat(3,1fr)}}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MINHA LISTA 🛒 • v0.2.1</title>
+    <style>
+:root{--bg-primary:#f4f7fb;--bg-card:#fff;--text-main:#172033;--text-muted:#687386;--border-color:#e3e8ef;--primary-color:#2563eb;--primary-hover:#1d4ed8;--success-color:#16a34a;--warning-color:#d97706;--danger-color:#dc2626;--card-shadow:0 8px 28px rgba(23,32,51,.07);--radius:18px}
+[data-theme="dark"]{--bg-primary:#0b1120;--bg-card:#121a2a;--text-main:#edf2f7;--text-muted:#9aa7ba;--border-color:#263246;--card-shadow:0 8px 28px rgba(0,0,0,.22)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg-primary);color:var(--text-main);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:108px}button,input,select{font:inherit}button{cursor:pointer}header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg-primary) 92%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-color);padding:11px max(14px,calc((100vw - 920px)/2));display:flex;align-items:center;justify-content:space-between;gap:10px}.container{max-width:920px;margin:auto;padding:14px}.brand{display:flex;align-items:center;gap:10px}.brand-icon{width:42px;height:42px;border-radius:13px;background:var(--primary-color);color:#fff;display:grid;place-items:center;font-size:22px}.brand h1{font-size:18px;margin:0}.brand p{font-size:11px;color:var(--text-muted);margin:2px 0}.actions-header{display:flex;gap:7px}.btn-theme,.icon-action{border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-main);border-radius:11px;width:40px;height:40px}.btn{border:0;border-radius:12px;padding:11px 14px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn-primary{background:var(--primary-color);color:#fff}.btn-primary:hover{background:var(--primary-hover)}.btn-success{background:var(--success-color);color:#fff}.btn-warning{background:var(--warning-color);color:#fff}.btn-danger{background:var(--danger-color);color:#fff}.btn-ghost{background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-main)}.btn-sm{padding:8px 10px;border-radius:10px;font-size:12px}.hero{background:linear-gradient(135deg,var(--bg-card),color-mix(in srgb,var(--primary-color) 7%,var(--bg-card)));border:1px solid var(--border-color);border-radius:22px;padding:16px;box-shadow:var(--card-shadow);margin-bottom:12px}.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);font-weight:800}.money-big{font-size:30px;font-weight:850;margin:2px 0}.budget-edit{width:110px}.budget-edit input{font-weight:750;text-align:right}.progress-wrap{height:9px;background:var(--border-color);border-radius:999px;overflow:hidden;margin:12px 0 8px}.progress-bar{height:100%;width:0;background:var(--success-color);border-radius:999px;transition:width .35s ease,background .2s}.progress-bar.warning{background:var(--warning-color)}.progress-bar.danger{background:var(--danger-color)}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{padding:10px 11px;border:1px solid var(--border-color);border-radius:13px;background:var(--bg-card)}.stat small{display:block;color:var(--text-muted);font-size:10px}.stat strong{display:block;margin-top:2px;font-size:15px}.quick-add{background:var(--bg-card);border:1px solid var(--border-color);border-radius:18px;padding:13px;box-shadow:var(--card-shadow);margin-bottom:12px}.quick-grid{display:grid;grid-template-columns:minmax(0,2fr) 120px 76px;gap:8px}.field{position:relative}.field label{display:block;font-size:10px;color:var(--text-muted);font-weight:750;margin:0 0 4px 2px}.field input,.field select{width:100%;height:44px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-card);color:var(--text-main);padding:0 12px;outline:0}.field input:focus,.field select:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary-color) 14%,transparent)}.quick-actions{display:flex;gap:8px;margin-top:9px}.quick-actions .btn-primary{flex:1}.offer-mini{margin-top:9px;border:1px dashed var(--border-color);border-radius:13px;padding:10px;background:color-mix(in srgb,var(--warning-color) 5%,var(--bg-card))}.offer-toggle{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:800}.offer-fields{display:none;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}.offer-fields.show{display:grid}.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:10px}.search-wrap{flex:1;position:relative}.search-wrap input{width:100%;height:44px;padding:0 42px;border:1px solid var(--border-color);border-radius:13px;background:var(--bg-card);color:var(--text-main);outline:0}.search-icon{position:absolute;left:13px;top:12px}.clear-search{position:absolute;right:7px;top:6px;width:32px;height:32px;border:0;border-radius:9px;background:transparent;color:var(--text-muted);display:none}.filters{display:flex;gap:6px;overflow:auto;margin-bottom:12px;padding-bottom:2px}.filter-btn{white-space:nowrap;border:1px solid var(--border-color);background:var(--bg-card);color:var(--text-main);border-radius:10px;padding:8px 11px;font-size:11px;font-weight:750}.filter-btn.active{background:var(--text-main);color:var(--bg-card)}.category-section{margin:0}.category-title{display:flex!important;align-items:center!important;gap:8px!important;padding:9px 2px!important;border-bottom:1px solid var(--border-color)!important;margin-bottom:5px!important}.category-title>div:first-child{font-weight:850!important;font-size:13px}.category-title .btn-danger{padding:5px 8px!important;font-size:10px!important}.product-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 8px;border-bottom:1px solid color-mix(in srgb,var(--border-color) 75%,transparent);transition:.2s}.product-item:last-child{border-bottom:0}.product-item.bought{opacity:.58}.product-item.bought .product-title{text-decoration:line-through}.product-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.checkbox-container input{width:21px;height:21px;accent-color:var(--success-color);margin-top:2px}.product-details{min-width:0}.product-title{margin:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.product-details p{margin:3px 0 0;font-size:11px;color:var(--text-muted)}.product-details p:nth-last-child(1){color:var(--text-main)}.product-actions{display:flex;gap:5px;flex-shrink:0}.product-actions button{border:0;border-radius:9px;padding:7px 8px}.promo-badge{display:inline-block;margin-left:5px;background:color-mix(in srgb,var(--warning-color) 16%,transparent);color:var(--warning-color);border-radius:7px;padding:2px 5px;font-size:9px;font-weight:800}.total-fixed{position:fixed;bottom:0;left:0;right:0;z-index:12;background:color-mix(in srgb,var(--bg-card) 96%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--border-color);box-shadow:0 -8px 24px rgba(0,0,0,.06)}.total-inner{max-width:920px;margin:auto;padding:9px 14px}.total-line{display:flex;justify-content:space-between;align-items:center;font-size:12px}.total-line.main{font-size:18px;font-weight:850;margin-top:3px}.bottom-actions{display:flex;gap:7px;margin-top:8px}.bottom-actions .btn{flex:1}.utility-panel{display:none}.utility-panel.show{display:block}.utility-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.utility-grid .btn{width:100%}.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.58);z-index:30;display:none;align-items:flex-end}.modal-backdrop.show{display:flex}.modal-sheet{width:min(680px,100%);max-height:90vh;overflow:auto;background:var(--bg-card);border-radius:22px 22px 0 0;padding:16px;margin:auto auto 0}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}.modal-head h3{margin:0}.close{border:0;background:var(--border-color);color:var(--text-main);width:34px;height:34px;border-radius:10px}.card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:18px;padding:14px;box-shadow:var(--card-shadow);margin-bottom:12px}.hidden-input{display:none}.input-container{position:relative}.clear-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:0;background:var(--border-color);color:var(--text-muted);border-radius:8px;display:none;align-items:center;justify-content:center}.row-inputs{display:grid;grid-template-columns:1fr 1fr;gap:9px}.form-group{margin-bottom:10px}.form-group label{display:block;font-size:11px;color:var(--text-muted);font-weight:750;margin-bottom:5px}.form-group input,.form-group select{width:100%;height:42px;border:1px solid var(--border-color);border-radius:11px;background:var(--bg-card);color:var(--text-main);padding:0 10px}.saved-lists-row,.io-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}.promo-box{border:1px dashed var(--border-color);padding:10px;border-radius:13px}.promo-preview{margin-top:8px;padding:9px 10px;border-radius:12px;background:color-mix(in srgb,var(--success-color) 7%,var(--bg-card));border:1px solid color-mix(in srgb,var(--success-color) 22%,var(--border-color));font-size:11px;line-height:1.45}.promo-preview strong{font-size:12px}.saving-value{color:var(--success-color);font-weight:850}.cat-chart-item{margin:7px 0}.cat-chart-label{display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)}.cat-chart-bar-bg{height:7px;background:var(--border-color);border-radius:999px;overflow:hidden}.cat-chart-bar-fill{height:100%;background:var(--primary-color);border-radius:999px}.counter-text{font-size:11px;color:var(--text-muted);margin-top:7px}.badge-alert{color:#fff;border-radius:8px;padding:4px 7px;font-size:10px;font-weight:800}.empty-state{text-align:center;padding:28px 12px;color:var(--text-muted)}#toast-container{position:fixed;top:70px;right:12px;z-index:50;display:flex;flex-direction:column;gap:7px}.toast{background:var(--bg-card);color:var(--text-main);border:1px solid var(--border-color);box-shadow:var(--card-shadow);padding:10px 13px;border-radius:11px;font-size:12px;animation:toastIn .22s ease}.toast.danger{border-left:4px solid var(--danger-color)}.toast.warning{border-left:4px solid var(--warning-color)}.toast.success{border-left:4px solid var(--success-color)}@keyframes toastIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}#custom-modal{position:fixed;inset:0;background:rgba(2,6,23,.58);z-index:40;display:none;align-items:center;justify-content:center;padding:14px}#custom-modal.active{display:flex}#custom-modal>.card{width:min(620px,100%);max-height:88vh;overflow:auto;margin:0;transform:scale(.96);transition:transform .25s ease}#custom-modal.active>.card{transform:scale(1)}footer{max-width:920px;margin:15px auto;text-align:center;color:var(--text-muted);font-size:10px}.shopping-mode .utility-trigger,.shopping-mode .brand p{display:none}.shopping-mode .container{padding-top:8px}.shopping-mode .quick-add{position:sticky;top:62px;z-index:8}.shopping-mode .product-actions{display:none}
+@media(max-width:680px){.quick-grid{grid-template-columns:minmax(0,1fr) 96px 68px}.offer-fields{grid-template-columns:1fr 1fr}.hero-top{align-items:center}.money-big{font-size:26px}.product-title{font-size:13px}.product-actions button{padding:6px 7px}}
+
+/* v0.1.1 — acessibilidade, limpeza rápida e navegação móvel */
+.settings-fixed{position:fixed;left:0;right:0;bottom:74px;z-index:13;display:flex;justify-content:center;pointer-events:none}
+.settings-fixed-btn{pointer-events:auto;border:1px solid var(--border-color);background:color-mix(in srgb,var(--bg-card) 96%,transparent);backdrop-filter:blur(12px);color:var(--text-main);box-shadow:0 6px 20px rgba(0,0,0,.12);border-radius:12px;padding:8px 16px;font-weight:800;font-size:12px}
+.input-container{width:100%}.input-container input{padding-right:44px!important}
+.clear-btn{display:none}.clear-btn.visible{display:flex}
+.quick-actions{align-items:stretch}.quick-actions .btn-ghost{flex:0 0 auto}
+@media(max-width:650px){
+  body{padding-bottom:154px;overflow-x:hidden}
+  header{padding:9px 10px;min-height:60px}
+  .container{width:100%;max-width:100%;padding:10px}
+  .brand h1{font-size:16px}.brand p{font-size:10px}.brand-icon{width:38px;height:38px}
+  .actions-header .btn-sm{padding:8px 9px;font-size:11px}.btn-theme{width:38px;height:38px}
+  .hero{padding:13px;border-radius:17px}.money-big{font-size:25px}.budget-edit{width:125px}
+  .quick-add{padding:11px;border-radius:16px}.quick-grid{grid-template-columns:minmax(0,1fr) 92px 70px;gap:6px}
+  .field input,.field select,.search-wrap input{height:42px;font-size:14px}
+  .offer-fields.show{grid-template-columns:1fr 1fr}
+  .offer-fields.show .field:last-child{grid-column:1/-1}
+  .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.quick-actions .btn-primary{grid-column:1/-1}.quick-actions .btn{min-height:42px}
+  .product-item{padding:10px 4px}.product-actions button{padding:7px 6px;font-size:11px}
+  .total-inner{padding:8px 10px}.bottom-actions{gap:6px}.bottom-actions .btn{padding:10px 8px;font-size:12px}
+  .settings-fixed{bottom:112px}.settings-fixed-btn{width:calc(100% - 20px);max-width:920px}
+  .modal-sheet{width:100%;max-height:92vh;padding:13px}.utility-grid,.saved-lists-row,.io-buttons{grid-template-columns:1fr}
+}
+@media(max-width:380px){.quick-grid{grid-template-columns:1fr 86px}.quick-grid .field:nth-child(3){grid-column:1/-1}.hero-top{flex-direction:column}.budget-edit{width:100%}.hero-stats{grid-template-columns:1fr 1fr}.hero-stats .stat:last-child{grid-column:1/-1}}
+
+/* v0.2.0 — responsividade reforçada */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{min-width:0}
+.container{width:100%;min-width:0}
+.quick-add,.hero,.card,.toolbar,.filters,.list-container{min-width:0;max-width:100%}
+.quick-grid>*{min-width:0}
+.input-container{min-width:0}
+.input-container input,.field input,.field select,.search-wrap input{max-width:100%;min-width:0}
+.product-item{min-width:0}
+.product-details{overflow:hidden}
+.product-actions{align-self:flex-start}
+.settings-fixed{left:10px;right:10px;width:auto}
+.settings-fixed-btn{max-width:920px;width:100%;margin:auto}
+@media(max-width:520px){
+  .actions-header .btn-sm{display:none}
+  .header{padding-left:8px;padding-right:8px}
+  .hero-top{gap:8px}
+  .hero-top>div:first-child{min-width:0}
+  .budget-edit{width:130px;flex:0 0 130px}
+  .quick-grid{grid-template-columns:minmax(0,1fr) minmax(82px,96px) minmax(58px,70px)}
+  .product-item{align-items:flex-start}
+  .product-left{min-width:0;flex:1}
+  .product-actions{width:auto}
+  .product-actions .btn-sm{padding:7px 6px}
+}
+@media(max-width:390px){
+  .container{padding:8px}
+  .hero{padding:11px}
+  .quick-add{padding:10px}
+  .quick-grid{grid-template-columns:1fr 1fr}
+  .quick-grid .field:first-child{grid-column:1/-1}
+  .quick-grid .field:nth-child(3){grid-column:1/-1}
+  .hero-top{flex-direction:column}
+  .budget-edit{width:100%;flex:1}
+  .hero-stats{grid-template-columns:1fr 1fr}
+  .hero-stats .stat:last-child{grid-column:1/-1}
+  .bottom-actions{grid-template-columns:1fr 1fr}
+  .bottom-actions .btn{min-width:0}
+  .product-item{gap:6px;padding-left:2px;padding-right:2px}
+  .product-actions{gap:3px}
+  .product-actions button{font-size:10px;padding:6px 5px}
+}
+@media(max-width:320px){
+  .quick-grid{grid-template-columns:1fr}
+  .quick-grid .field:first-child,.quick-grid .field:nth-child(3){grid-column:auto}
+  .hero-stats{grid-template-columns:1fr}
+  .hero-stats .stat:last-child{grid-column:auto}
+  .bottom-actions{grid-template-columns:1fr}
+  .product-item{flex-direction:column}
+  .product-actions{width:100%;justify-content:flex-end}
+}
+
+@media print{body{padding:0;background:#fff}header,.hero,.quick-add,.toolbar,.filters,.total-fixed,footer,.utility-trigger,.no-print{display:none!important}.container{padding:0}.card{box-shadow:none;border:0}}
+
+/* v0.2.0 — perfil, tema animado e orçamento padronizado */
+.budget-edit .input-container input{width:100%;height:44px;border:1px solid var(--border-color);border-radius:12px;background:var(--bg-card);color:var(--text-main);padding:0 44px 0 12px;outline:0;box-sizing:border-box}
+.budget-edit .input-container input:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary-color) 14%,transparent)}
+.theme-icon{display:inline-block;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.btn-theme.theme-spin .theme-icon{transform:rotate(360deg) scale(.82)}
+.profile-avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;background:var(--border-color);border:2px solid var(--primary-color);display:block}
+.profile-cover{width:100%;height:115px;border-radius:14px;object-fit:cover;background:linear-gradient(135deg,var(--primary-color),var(--bg-primary));display:block}
+.profile-card{position:relative;margin-top:46px;padding-top:48px;text-align:center}
+.profile-cover-wrap{position:absolute;left:0;right:0;top:0;height:92px;overflow:hidden;border-radius:16px 16px 0 0}
+.profile-avatar-wrap{position:absolute;top:54px;left:50%;transform:translateX(-50%);padding:4px;background:var(--bg-card);border-radius:50%}
+.profile-name{font-size:18px;font-weight:850;margin:5px 0 2px}.profile-sub{font-size:11px;color:var(--text-muted)}
+.profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.profile-preview{display:grid;grid-template-columns:88px 1fr;gap:12px;align-items:center}
+@media(max-width:390px){.profile-actions{grid-template-columns:1fr}.budget-edit{width:100%!important}.budget-edit .input-container{width:100%}}
+.bottom-nav-inner{display:flex;gap:8px;width:100%;max-width:920px;justify-content:center;padding:0 10px}.bottom-nav-inner .settings-fixed-btn{flex:1;max-width:300px}.google-connect-btn{border-color:color-mix(in srgb,var(--primary-color) 35%,var(--border-color))}.profile-modal-full .modal-sheet{width:100%;max-width:none;height:100dvh;max-height:none;border-radius:0;padding:18px 16px 120px;margin:0;overflow:auto}.profile-modal-full .profile-card{margin-top:58px}.profile-cover{height:220px;border-radius:18px}.profile-cover-wrap{height:210px;border-radius:18px 18px 0 0}.profile-avatar{width:128px;height:128px;border-width:3px}.profile-avatar-wrap{top:160px}.profile-card{padding-top:78px;min-height:380px}.profile-name{font-size:22px}.profile-preview{grid-template-columns:140px 1fr}.google-status{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--border-color);border-radius:14px}.google-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:var(--border-color)}.sync-badge{font-size:10px;padding:4px 7px;border-radius:999px;background:color-mix(in srgb,var(--success-color) 15%,transparent);color:var(--success-color);font-weight:800}.cloud-card{border:1px solid color-mix(in srgb,var(--primary-color) 28%,var(--border-color));background:color-mix(in srgb,var(--primary-color) 5%,var(--bg-card))}
+@media(max-width:600px){.header-profile-btn{padding:8px 9px}.actions-header{gap:5px}.actions-header .btn-sm{font-size:10px}.profile-cover{height:250px}.profile-cover-wrap{height:240px}.profile-avatar{width:145px;height:145px}.profile-avatar-wrap{top:184px}.profile-card{margin-top:62px;padding-top:90px;min-height:430px}.profile-modal-full .modal-sheet{padding-left:10px;padding-right:10px}.bottom-nav-inner .settings-fixed-btn{font-size:11px;padding:10px 8px}}
+@media(max-width:360px){header{padding-left:8px!important;padding-right:8px!important}.container{padding-left:8px;padding-right:8px}.brand-icon{width:36px;height:36px}.brand h1{font-size:16px}.brand p{display:none}.actions-header .btn-sm{padding:7px}.actions-header .header-profile-btn{font-size:0}.actions-header .header-profile-btn::before{content:"👤";font-size:16px}.actions-header .btn-ghost:not(.header-profile-btn){font-size:0}.actions-header .btn-ghost:not(.header-profile-btn)::before{content:"📖";font-size:16px}.btn-theme{width:36px;height:36px}.quick-grid{grid-template-columns:minmax(0,1fr) 92px 62px}.bottom-nav-inner{padding:0 7px}.bottom-nav-inner .settings-fixed-btn{font-size:10px}}
+
 </style>
-<style id="v313-install-style">#installCard{animation:installCardIn .55s ease both}@keyframes installCardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@media(max-width:560px){#installCard>div{align-items:flex-start}#installCard .btn{white-space:nowrap}}</style><style id="v314-css">.categoryLine{display:flex;gap:8px;align-items:center}.categoryLine select{flex:1}.categoryAddBtn{flex:0 0 auto;min-width:44px}.inputClearWrap{position:relative;display:flex;align-items:center}.inputClearWrap>input{flex:1;min-width:0;padding-right:42px!important}.inputClearBtn{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:transparent;color:var(--muted);font-size:23px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3}.inputClearBtn:hover{background:var(--line);color:var(--text)}.moneyInput{font-variant-numeric:tabular-nums}.tutorialStep.visible{animation:tutorialReveal .55s cubic-bezier(.2,.7,.2,1) both}@keyframes tutorialReveal{from{opacity:0;transform:translateY(22px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}</style></head>
-<body data-theme="light">
-<div class="toastwrap" id="toastwrap"></div>
-<header class="top"><div class="app"><div class="topline"><div class="brand"><img class="logo" src="./icon-512.png" alt="Minha Lista"><div><b>MINHA LISTA</b><small>Koda Sistemas • Compras inteligentes</small></div></div><div class="actions"><button class="iconbtn" id="installBtn" title="Instalar aplicativo" onclick="installApp()">📲</button><button class="iconbtn" id="syncBtn" title="Conta e sincronização" onclick="openAccount()">☁️</button><button class="iconbtn" onclick="toggleTheme()" id="themeBtn">☀️</button></div></div><nav class="nav"><button data-view="home" class="active">🏠 Início</button><button data-view="list">🛒 Lista</button><button data-view="history">🧾 Histórico</button><button data-view="catalog">📦 Produtos</button><button data-view="account">☁️ Conta</button><button data-view="backup">🛡️ Segurança</button><button data-view="tutorial">❓ Tutorial</button></nav></div></header>
-<main class="app">
-<section id="home" class="view active"><div class="card" id="installCard" style="display:none"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:2rem">📲</div><div style="flex:1"><h3 style="margin:0 0 4px">Instale o Minha Lista</h3><p class="muted" id="installHint" style="margin:0">Use como aplicativo, sem precisar ficar abrindo o link.</p></div><button class="btn primary" id="installActionBtn" onclick="installApp()">Instalar</button></div></div><div class="card"><h2>Seu painel de compras</h2><p class="muted">Tudo fica salvo no aparelho. Com conta configurada, o sistema também pode sincronizar seus dados na nuvem.</p><div class="grid three"><div class="stat"><small>Compra atual</small><strong id="dashCurrent">R$ 0,00</strong></div><div class="stat"><small>Compras registradas</small><strong id="dashPurchases">0</strong></div><div class="stat"><small>Produtos conhecidos</small><strong id="dashProducts">0</strong></div></div></div><div class="card"><h3>📊 Resumo do mês</h3><div class="grid"><div class="stat"><small>Gasto no mês</small><strong id="monthSpend">R$ 0,00</strong></div><div class="stat"><small>Maior compra</small><strong id="maxPurchase">R$ 0,00</strong></div></div><div style="margin-top:14px"><div class="listrow"><span>Categoria que mais pesa</span><strong id="topCategory">—</strong></div><div class="listrow"><span>Produto mais comprado</span><strong id="topProduct">—</strong></div></div></div><div class="card smartPulse"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><div><h3 style="margin:0">🧠 Minha Lista Inteligente</h3><p class="muted" style="margin:4px 0 0">O sistema observa seu histórico para sugerir compras e identificar variações de preço.</p></div><span class="tag">v3.1</span></div><div id="smartInsights" class="smartGrid" style="margin-top:12px"></div></div><div class="card"><h3>⚡ Ações rápidas</h3><div class="grid"><button class="btn primary" onclick="go('list')">🛒 Continuar compra</button><button class="btn secondary" onclick="go('catalog')">📦 Meus produtos</button><button class="btn secondary" onclick="saveSnapshot()">💾 Criar backup</button><button class="btn success" onclick="finalizePurchase()">✅ Finalizar compra</button></div></div></section>
-<section id="list" class="view"><div class="card"><h2>🛒 Lista atual</h2><div class="row"><div class="field"><label>Orçamento</label><input id="budget" inputmode="decimal" placeholder="R$ 0,00"></div><div class="field"><label>Buscar na lista</label><input id="search" placeholder="Ex.: arroz, leite..."></div></div><div class="progress"><i id="budgetBar"></i></div><p class="muted" id="budgetStatus" style="margin:8px 0 0"></p></div><div class="card"><h3 id="formTitle">➕ Adicionar produto</h3><div class="field"><label>Nome do produto</label><input id="prodName" autocomplete="off" placeholder="Comece a digitar..." oninput="suggestProducts()"><div id="suggestions" class="suggestions" hidden></div></div><div class="row"><div class="field"><label>Categoria</label><div class="categoryLine"><select id="prodCategory"></select><button type="button" class="iconbtn categoryAddBtn" onclick="addCategory()" title="Adicionar categoria" aria-label="Adicionar categoria">＋</button></div></div><div class="field"><label>Quantidade</label><input id="prodQty" type="number" min="0.001" step="0.001" value="1"></div></div><div class="row"><div class="field"><label>Preço unitário</label><input id="prodPrice" inputmode="decimal" placeholder="0,00"></div><div class="field"><label>Preço promocional (opcional)</label><input id="prodPromo" inputmode="decimal" placeholder="0,00"></div></div><button class="btn primary full" id="saveProductBtn" onclick="addItem()">Adicionar à lista</button></div><div class="card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3 style="margin:0">Itens</h3><button class="btn secondary" onclick="clearBought()">🧹 Limpar marcados</button></div><div id="listItems"></div></div></section>
-<section id="history" class="view"><div class="card"><h2>🧾 Histórico de compras</h2><p class="muted">Cada compra finalizada vira um registro independente. A lista atual não é apagada do histórico.</p><div class="field"><label>Pesquisar</label><input id="historySearch" placeholder="Data, nome ou produto..."></div></div><div id="historyItems"></div></section>
-<section id="catalog" class="view"><div class="card"><h2>📦 Catálogo inteligente</h2><p class="muted">O sistema aprende os produtos que você já cadastrou e reutiliza nome, categoria e último preço.</p><div class="field"><label>Pesquisar produto</label><input id="catalogSearch" placeholder="Digite para localizar..."></div><div id="catalogItems"></div></div></section>
-<section id="account" class="view"><div class="card"><h2>☁️ Minha conta</h2><div id="accountPanel"></div><div id="accountFeedback" class="accountStatus info"><span>ℹ️</span><div>Aguardando conexão com sua conta.</div></div></div><div class="card"><h3>🔄 Sincronização</h3><p class="muted">Quando o Firebase estiver configurado, os dados ficam vinculados ao seu usuário. O sistema continua funcionando localmente mesmo sem internet.</p><div class="listrow"><span>Status</span><strong id="accountSyncStatus">Não configurada</strong></div><div class="listrow"><span>Última sincronização</span><strong id="accountLastSync">Nunca</strong></div></div></section>
-<section id="tutorial" class="view"><div class="card tutorialHero"><span class="floatEmoji e1">🛒</span><span class="floatEmoji e2">✨</span><span class="floatEmoji e3">💰</span><span class="floatEmoji e4">📦</span><h2>❓ Como usar o Minha Lista</h2><p class="muted">Um guia rápido, visual e animado para aproveitar cada recurso.</p><button class="btn primary smartPulse" onclick="openTutorial()">▶️ Iniciar tutorial animado</button></div><div class="card"><h3>⚡ Atalhos rápidos</h3><div class="grid"><button class="btn secondary" onclick="go('list')">🛒 Criar lista</button><button class="btn secondary" onclick="go('catalog')">📦 Ver produtos</button><button class="btn secondary" onclick="go('history')">🧾 Histórico</button><button class="btn secondary" onclick="go('account')">☁️ Minha conta</button></div></div></section>
-<section id="backup" class="view"><div class="card"><h2>🛡️ Segurança dos dados</h2><div class="listrow"><span>Armazenamento local</span><strong id="localStatus">Ativo</strong></div><div class="listrow"><span>Último backup</span><strong id="lastBackup">Nunca</strong></div><div class="listrow"><span>Sincronização</span><strong id="cloudStatus">Não configurada</strong></div><button class="btn warning full" onclick="saveSnapshot()">💾 Fazer backup agora</button><button class="btn secondary full" style="margin-top:8px" onclick="document.getElementById('importFile').click()">📥 Restaurar backup</button><input id="importFile" type="file" accept="application/json,.json" hidden onchange="restoreBackup(event)"><button class="btn secondary full" style="margin-top:8px" onclick="exportCSV()">📊 Exportar histórico CSV</button></div><div class="card"><h3>🔐 Proteção contra perda</h3><p class="muted">Antes de restaurar um backup, o sistema cria automaticamente uma cópia de segurança do estado atual. Assim, uma restauração errada pode ser revertida.</p></div></section>
-</main>
-<div class="bottom"><div><small class="muted">Total marcado</small><br><strong id="bottomTotal">R$ 0,00</strong></div><button class="btn success" onclick="finalizePurchase()">✅ Finalizar compra</button></div><footer style="text-align:center;padding:12px 16px 18px;color:var(--muted);font-size:.72rem"><b>MINHA LISTA</b> • Koda Sistemas • <span id="footerVersion">v3.1.0</span> • Dados locais + sincronização segura</footer>
-<div class="modal" id="modal"><div class="modalbox"><h3 id="modalTitle">Confirmação</h3><div id="modalBody"></div><div class="modalactions" id="modalActions"></div></div></div>
-<div class="modal" id="tutorialModal"><div class="modalbox"><h3>✨ Tutorial completo do Minha Lista</h3><p class="muted">Role devagar. Cada etapa entra com uma animacao e explica o que fazer, quando usar e o que o sistema salva.</p><div class="tutorialProgress"><i id="tutorialProgressBar"></i></div><div class="tutorialScroll" id="tutorialScroll">
-<div class="tutorialStep reveal"><b>1️⃣ 🛒 Comece pela sua lista</b><p>Na tela Lista, informe o nome do produto, escolha a categoria, quantidade e preço. Depois toque em <b>Adicionar</b>. O item passa a fazer parte da compra atual.</p><small class="muted">💡 Dica: nao precisa digitar tudo perfeitamente para sempre. O catalogo ajuda nas proximas compras.</small></div>
-<div class="tutorialStep reveal"><b>2️⃣ ✍️ Digitação inteligente</b><p>Ao começar a digitar o nome, o sistema consulta os produtos que ja conhece e pode sugerir nome, categoria e ultimo preço.</p><small class="muted">🎯 Quanto mais voce usa o catalogo, menos precisa redigitar.</small></div>
-<div class="tutorialStep reveal"><b>3️⃣ ❌ Limpe qualquer campo rapidamente</b><p>Nos campos com o simbolo <b>×</b>, um toque apaga o conteudo inteiro. Isso evita apagar nomes ou valores grandes caractere por caractere.</p><small class="muted">📱 Recurso pensado principalmente para uso no celular.</small></div>
-<div class="tutorialStep reveal"><b>4️⃣ 💰 Digite preços como dinheiro</b><p>Os campos de valor usam teclado numerico no celular. Na entrada monetaria, os dois ultimos algarismos representam os centavos: <b>629 → R$ 6,29</b> e <b>6290 → R$ 62,90</b>.</p><small class="muted">🧮 Assim voce consegue cadastrar muitos preços rapidamente.</small></div>
-<div class="tutorialStep reveal"><b>5️⃣ 🗂️ Crie suas proprias categorias</b><p>Se as categorias padrao nao forem suficientes, toque no <b>＋</b> ao lado da categoria e crie uma nova, como Padaria, Pet, Bebê, Congelados ou outra secao.</p><small class="muted">📌 A categoria criada fica salva para as proximas compras.</small></div>
-<div class="tutorialStep reveal"><b>6️⃣ 🧠 Use a Minha Lista Inteligente</b><p>O sistema usa seu catalogo e historico para reaproveitar informacoes. Produtos recorrentes podem voltar mais rapidamente para uma nova lista, reduzindo digitacao.</p><small class="muted">🔎 Historico e catalogo trabalham juntos para formar sua memoria de compras.</small></div>
-<div class="tutorialStep reveal"><b>7️⃣ 🧾 Finalize e consulte o historico</b><p>Ao finalizar uma compra, o sistema registra os itens, quantidades, valores e total. Em Historico, voce consegue consultar compras anteriores e identificar padroes de consumo.</p><small class="muted">📅 Use o historico para comparar compras de meses diferentes.</small></div>
-<div class="tutorialStep reveal"><b>8️⃣ 📦 Entenda o catalogo</b><p>Produtos cadastrados formam uma base reutilizavel. O catalogo guarda informacoes que ajudam a preencher novas compras sem comecar do zero.</p><small class="muted">⚡ O objetivo e transformar cadastro repetitivo em selecao rapida.</small></div>
-<div class="tutorialStep reveal"><b>9️⃣ ☁️ Conecte sua conta Google</b><p>Entre em <b>Conta</b> e toque em <b>Entrar com Google</b>. Escolha sua conta. O login so sera considerado concluido quando o Firebase confirmar o usuario.</p><small class="muted">✅ Depois da conexao, o sistema mostra nome, e-mail e estado da conta.</small></div>
-<div class="tutorialStep reveal"><b>🔟 🔄 Sincronizacao e conta</b><p>Conta conectada e sincronizacao sao etapas diferentes. Primeiro o Google autentica voce; depois o sistema grava os dados no Firestore associados ao seu UID.</p><small class="muted">🛡️ Seus dados locais continuam sendo preservados quando a nuvem estiver indisponivel.</small></div>
-<div class="tutorialStep reveal"><b>1️⃣1️⃣ 💾 Backup manual</b><p>Na area Segurança, crie um backup sempre que quiser uma copia independente dos seus dados. Guarde o arquivo em local seguro, de preferencia em mais de um local.</p><small class="muted">🔐 Backup e sincronizacao sao camadas diferentes de protecao.</small></div>
-<div class="tutorialStep reveal"><b>1️⃣2️⃣ 🛡️ O que acontece se ficar sem internet?</b><p>O aplicativo continua usando os dados locais. Quando a conta estiver conectada e a internet voltar, o sistema pode sincronizar as alteracoes pendentes.</p><small class="muted">📡 Nao apague os dados locais apenas porque a nuvem demorou para responder.</small></div>
-<div class="tutorialStep reveal"><b>1️⃣3️⃣ 🚀 Atualizacoes sem reinstalar</b><p>Quando uma nova versao for publicada, o sistema compara a versao instalada com a versao disponivel. Voce pode escolher <b>Atualizar agora</b> ou <b>Mais tarde</b>.</p><small class="muted">🔄 A atualizacao foi projetada para trocar os arquivos do aplicativo sem apagar sua lista local.</small></div>
-<div class="tutorialStep reveal"><b>1️⃣4️⃣ 📲 Instale como aplicativo</b><p>Quando o navegador liberar a instalacao PWA, use o botao <b>📲</b> no topo. O aplicativo pode ser instalado na tela inicial e aberto como um app.</p><small class="muted">📌 Se o navegador nao mostrar o prompt, use o menu do navegador e procure por Instalar aplicativo ou Adicionar a tela inicial.</small></div>
-<div class="tutorialStep reveal"><b>1️⃣5️⃣ 🧭 Uma rotina recomendada</b><p>Para evitar perda de dados, mantenha a conta conectada, sincronize quando terminar uma compra e faca backups periodicos. Antes de uma grande alteracao ou atualizacao, crie um backup.</p><small class="muted">🏆 Assim voce tem tres camadas: dados locais + nuvem + backup independente.</small></div>
-</div></div></div><div class="modal" id="updateModal"><div class="modalbox"><h3>🚀 Atualização disponível</h3><p>Uma nova versão do <b>Minha Lista</b> está disponível.</p><div class="card" style="background:var(--bg);margin:12px 0"><div class="listrow"><span>Versão atual</span><strong id="oldVersion">—</strong></div><div class="listrow"><span>Nova versão</span><strong id="newVersion">—</strong></div><p id="updateNotes" class="muted"></p></div><div class="modalactions"><button class="btn secondary" onclick="laterUpdate()">Mais tarde</button><button class="btn primary" onclick="applyUpdate()">Atualizar agora</button></div></div></div>
-<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore-compat.js"></script>
-<script>
-const APP_VERSION='3.1.10';
-// CONFIGURACAO WEB PUBLICA DO FIREBASE — NAO CONTEM CHAVES PRIVADAS.
-const FIREBASE_CONFIG={
- apiKey:'AIzaSyBA8xfkCYf6a32rZBh8KtiazCoG7kuNQMo',
- authDomain:'minha-lista-koda.firebaseapp.com',
- projectId:'minha-lista-koda',
- storageBucket:'minha-lista-koda.firebasestorage.app',
- messagingSenderId:'612515936266',
- appId:'1:612515936266:web:0ce4a3718821df2b7f87f3',
- measurementId:'G-K68Z39RS0X'
+  </head>
+  <body data-theme="light">
+  <div id="toast-container"></div>
+  <header>
+    <div class="brand"><div class="brand-icon">🛒</div><div><h1>MINHA LISTA</h1><p>Compra rápida, orçamento sob controle.</p></div></div>
+    <div class="actions-header">
+      <button class="btn btn-ghost btn-sm header-profile-btn" onclick="openProfile()" title="Perfil">👤 Perfil</button>
+      <button class="btn btn-ghost btn-sm" onclick="openTutorial()" title="Tutorial">📖 Tutorial</button>
+      <button class="btn-theme" id="theme-toggle" onclick="toggleTheme()" title="Tema"><span class="theme-icon">☀️</span></button>
+    </div>
+  </header>
+  <div class="container">
+    <section class="hero">
+      <div class="hero-top">
+        <div><div class="eyebrow">Orçamento da compra</div><div class="money-big" id="hero-remaining">R$ 0,00</div><div class="counter-text" id="hero-label">Defina seu limite para começar</div></div>
+        <div class="budget-edit"><label class="eyebrow">Limite</label><div class="input-container"><input type="text" inputmode="numeric" id="budget-input" placeholder="R$ 0,00" oninput="formatCurrencyInput(this);checkClear(this);updateBudget()"><button type="button" class="clear-btn" onclick="clearInput('budget-input')">&times;</button></div></div>
+      </div>
+      <div class="progress-wrap"><div id="budget-progress" class="progress-bar"></div></div>
+      <div class="hero-stats">
+        <div class="stat"><small>Itens</small><strong id="cart-counter">0 de 0</strong></div>
+        <div class="stat"><small>No carrinho</small><strong id="hero-cart">R$ 0,00</strong></div>
+        <div class="stat"><small>Previsto</small><strong id="hero-total">R$ 0,00</strong></div>
+      </div>
+      <div style="margin-top:8px"><span id="budget-alert-badge" class="badge-alert" style="display:none"></span><span id="budget-text" style="display:none"></span></div>
+    </section>
+
+    <section id="smart-suggestions" class="card cloud-card" style="display:none">
+      <div class="row" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="eyebrow">🧠 Inteligência da sua compra</div><b>Produtos que costumam aparecer nas suas compras</b></div><span class="sync-badge">Sugestões</span></div>
+      <div id="smart-suggestion-list" style="margin-top:9px"></div>
+    </section>
+
+    <section class="quick-add">
+      <div class="eyebrow" style="margin-bottom:8px">Adicionar rapidamente</div>
+      <input type="hidden" id="edit-id">
+      <div class="quick-grid">
+        <div class="field"><label>PRODUTO</label><div class="input-container"><input id="prod-name" placeholder="Ex.: Arroz 5kg" autocomplete="off" oninput="this.classList.remove('input-error');checkClear(this)"><button type="button" class="clear-btn" onclick="clearInput('prod-name')">&times;</button></div></div>
+        <div class="field"><label>PREÇO</label><div class="input-container"><input id="prod-price" inputmode="numeric" placeholder="0,00" oninput="formatCurrencyInput(this);checkClear(this)"><button type="button" class="clear-btn" onclick="clearInput('prod-price')">&times;</button></div></div>
+        <div class="field"><label>QTD.</label><div class="input-container"><input id="prod-qty" type="number" value="1" min="0" step="0.001" oninput="checkClear(this)"><button type="button" class="clear-btn" onclick="clearInput('prod-qty')">&times;</button></div></div>
+      </div>
+      <div class="offer-mini">
+        <div class="offer-toggle"><span>🏷️ Tem oferta?</span><button type="button" class="btn btn-ghost btn-sm" id="offer-toggle-btn" onclick="toggleOffer()">Adicionar</button></div>
+        <div class="offer-fields" id="offer-fields">
+          <div class="field"><label>A PARTIR DE</label><div class="input-container"><input id="prod-promo-qty" type="number" min="2" placeholder="3" oninput="checkClear(this)"><button type="button" class="clear-btn" onclick="clearInput('prod-promo-qty')">&times;</button></div></div>
+          <div class="field"><label>PREÇO POR UN.</label><div class="input-container"><input id="prod-promo-price" inputmode="numeric" placeholder="6,55" oninput="formatCurrencyInput(this);checkClear(this)"><button type="button" class="clear-btn" onclick="clearInput('prod-promo-price')">&times;</button></div></div>
+          <div class="field"><label>CATEGORIA</label><select id="prod-category"></select></div>
+        </div>
+        <div id="promo-preview" class="promo-preview" style="display:none"></div>
+        <div id="promo-apply-wrap" style="display:none;margin-top:8px">
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:750;cursor:pointer">
+            <input id="prod-promo-apply" type="checkbox" checked onchange="updatePromoPreview()" style="width:18px;height:18px;accent-color:var(--success-color)"> Aplicar oferta quando atingir a quantidade
+          </label>
+        </div>
+        <div class="field" id="category-normal-wrap" style="margin-top:8px"><label>CATEGORIA</label><select id="prod-category-normal"></select></div>
+      </div>
+      <div class="quick-actions"><button class="btn btn-primary" id="btn-save-prod" onclick="saveProduct()">➕ Adicionar produto</button><button class="btn btn-ghost" id="btn-clear-form" onclick="resetForm()">🧹 Limpar campos</button><button class="btn btn-ghost" id="btn-cancel-edit" onclick="resetForm()" style="display:none">Cancelar edição</button></div>
+    </section>
+
+    <div class="toolbar">
+      <div class="search-wrap"><span class="search-icon">🔎</span><input type="text" id="search-input" placeholder="Buscar produto..." oninput="checkClear(this);renderList()"><button class="clear-search" id="search-clear" onclick="clearInput('search-input')">✕</button></div>
+      <button class="btn btn-ghost" onclick="toggleShoppingMode()" title="Modo compra">🛍️</button>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Todos</button><button class="filter-btn" data-filter="pending" onclick="setFilter('pending')">Pendentes</button><button class="filter-btn" data-filter="bought" onclick="setFilter('bought')">✓ Peguei</button>
+    </div>
+
+    <div id="list-container" class="category-section"></div>
+    <footer><span>Koda Sistemas</span> • <strong>MINHA LISTA v0.2.1</strong> • Dados locais + sincronização Google</footer>
+  </div>
+
+  <div class="settings-fixed no-print">
+    <div class="bottom-nav-inner">
+      <button class="settings-fixed-btn google-connect-btn" id="google-connect-btn" onclick="toggleGoogleAccount()">🔐 <span>Google</span></button>
+      <button class="settings-fixed-btn" onclick="openUtilities()">⚙️ <span>Configurações</span></button>
+    </div>
+  </div>
+
+  <div class="total-fixed"><div class="total-inner">
+    <div class="total-line"><span>🛒 No carrinho</span><strong id="total-cart-value">R$ 0,00</strong></div>
+    <div class="total-line main"><span>Total da compra</span><span id="total-value">R$ 0,00</span></div>
+    <div class="bottom-actions no-print"><button class="btn btn-success" onclick="copyListText()">📋 WhatsApp</button><button class="btn btn-primary" onclick="finalizePurchase()">✅ Finalizar</button></div>
+  </div></div>
+
+  <div class="modal-backdrop" id="utilities-modal" onclick="if(event.target===this)closeUtilities()"><div class="modal-sheet">
+    <div class="modal-head"><h3>⚙️ Ferramentas</h3><button class="close" onclick="closeUtilities()">✕</button></div>
+    <div class="card cloud-card"><div class="eyebrow">☁️ Conta e sincronização</div><div id="google-status-panel" class="google-status" style="margin-top:9px"><div class="google-avatar">G</div><div style="flex:1"><b id="google-status-title">Não conectado</b><div id="google-status-sub" class="counter-text">Seus dados ainda estão somente neste aparelho.</div></div><span id="google-sync-badge" class="sync-badge" style="display:none">Sincronizado</span></div><div class="io-buttons" style="margin-top:9px"><button class="btn btn-primary" onclick="toggleGoogleAccount()" id="google-utility-btn">🔐 Conectar Google</button><button class="btn btn-ghost" onclick="forceCloudSync()">☁️ Sincronizar agora</button></div></div>
+    <div class="card"><div class="eyebrow">Compra</div><div class="form-group"><label>Nome da lista</label><div class="input-container"><input id="save-list-name" placeholder="Ex.: Compra do mês" oninput="checkClear(this)"><button type="button" class="clear-btn" onclick="clearInput('save-list-name')">&times;</button></div></div><div class="saved-lists-row"><button class="btn btn-primary" onclick="saveCurrentListInternal()">💾 Salvar</button><select id="saved-lists-select" onchange="loadListInternal()"><option value="">Carregar lista salva</option></select></div></div>
+    <div class="card"><div class="eyebrow">Relatórios</div><div class="io-buttons"><button class="btn btn-primary" onclick="generatePDF()">📄 Gerar PDF</button><button class="btn btn-success" onclick="copyListText()">📋 Copiar texto</button></div></div>
+    <div class="card"><div class="eyebrow">Dados e manutenção</div><div class="io-buttons"><button class="btn btn-warning" onclick="exportData()">📤 Exportar backup</button><button class="btn btn-success" onclick="triggerImport()">📥 Importar backup</button><input type="file" id="import-file" class="hidden-input" accept=".json" onchange="importData(event)"></div></div>
+    <div class="card"><div class="eyebrow">Categorias</div><div class="form-group"><div class="input-container"><input type="text" id="new-category-name" placeholder="Ex.: Bebidas, Açougue..." oninput="checkClear(this)"><button type="button" class="clear-btn" onclick="clearInput('new-category-name')">&times;</button></div></div><button class="btn btn-primary" onclick="addCategory()">+ Criar categoria</button></div>
+  </div></div>
+
+  <div class="modal-backdrop profile-modal-full" id="profile-modal" onclick="if(event.target===this)closeProfile()"><div class="modal-sheet">
+    <div class="modal-head"><h3>👤 Meu Perfil</h3><button class="close" onclick="closeProfile()">✕</button></div>
+    <div class="card profile-card">
+      <div class="profile-cover-wrap"><img id="profile-cover-preview" class="profile-cover" alt="Capa do perfil"></div>
+      <div class="profile-avatar-wrap"><img id="profile-avatar-preview" class="profile-avatar" alt="Foto do perfil"></div>
+      <div id="profile-name-preview" class="profile-name">Seu nome</div>
+      <div class="profile-sub">Personalize seu perfil de compras</div><div id="profile-cloud-status" class="counter-text" style="margin-top:7px">🔐 Conecte o Google para sincronizar seu perfil.</div>
+    </div>
+    <div class="card">
+      <div class="form-group"><label>Nome</label><div class="input-container"><input id="profile-name" type="text" placeholder="Digite seu nome" oninput="checkClear(this);renderProfile()"><button type="button" class="clear-btn" onclick="clearInput('profile-name')">&times;</button></div></div>
+      <div class="profile-actions">
+        <button class="btn btn-primary" onclick="document.getElementById('profile-avatar-file').click()">📷 Foto de perfil</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('profile-cover-file').click()">🖼️ Foto de capa</button>
+      </div>
+      <input id="profile-avatar-file" class="hidden-input" type="file" accept="image/*" onchange="loadProfileImage(event,'avatar')">
+      <input id="profile-cover-file" class="hidden-input" type="file" accept="image/*" onchange="loadProfileImage(event,'cover')">
+      <button class="btn btn-success" style="width:100%;margin-top:9px" onclick="saveProfile()">💾 Salvar perfil</button>
+    </div>
+  </div></div>
+
+  <div id="custom-modal"><div class="card"><h3 id="modal-title">Confirmação</h3><div id="modal-body"></div><div id="modal-actions" style="display:flex;gap:8px;justify-content:flex-end"></div></div></div>
+  <div id="category-chart-box" style="display:none"><div id="category-bars"></div></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
+// COLE AQUI O firebaseConfig da sua Web App do Firebase.
+window.FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBA8xfkCYf6a32rZBh8KtiazCoG7kuNQMo",
+  authDomain: "minha-lista-koda.firebaseapp.com",
+  projectId: "minha-lista-koda",
+  storageBucket: "minha-lista-koda.firebasestorage.app",
+  messagingSenderId: "612515936266",
+  appId: "1:612515936266:web:0ce4a3718821df2b7f87f3",
+  measurementId: "G-K68Z39RS0X"
 };
-let cloud={enabled:false,user:null,db:null,auth:null,lastSync:null,saveTimer:null,loginPending:false,statusType:'info',statusMessage:'Aguardando conexão com sua conta.',lastHandledUid:null};
-let data={version:APP_VERSION,categories:['Básico','Limpeza','Verduras','Bebidas','Açougue'],items:[],purchases:[],catalog:{},budget:0,lastBackup:null,updatedAt:null};
-const $=id=>document.getElementById(id);
-const money=n=>(Number(n)||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-const parseMoney=s=>{if(typeof s==='number')return s;return Number(String(s||'').replace(/\s/g,'').replace(/\./g,'').replace(',','.'))||0};
-function toast(msg,type='ok'){const icons={ok:'✅',warn:'⚠️',danger:'❌',info:'ℹ️'};const el=document.createElement('div');el.className='toast '+type;el.setAttribute('role','status');el.innerHTML=`<span class="toastIcon">${icons[type]||'ℹ️'}</span><span class="toastText">${escapeHtml(msg)}</span>`;$('toastwrap').appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transform='translateY(-8px)';setTimeout(()=>el.remove(),180)},3200)}
-function go(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===view));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===view));renderAll();scrollTo({top:0,behavior:'smooth'})}
-document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>go(b.dataset.view));
-function persist(){data.updatedAt=new Date().toISOString();localStorage.setItem('minha_lista_v3_data',JSON.stringify(data));queueCloudSave();}
-function queueCloudSave(){if(!cloud.user||!cloud.db)return;clearTimeout(cloud.saveTimer);cloud.saveTimer=setTimeout(saveCloud,900)}
-async function saveCloud(){if(!cloud.user||!cloud.db)return false;try{const raw=JSON.stringify(data);if(new Blob([raw]).size>850000){toast('A nuvem atingiu o limite seguro de tamanho. Faça um backup e arquive o histórico antigo.','warn');return false}await cloud.db.collection('users').doc(cloud.user.uid).collection('app').doc('main').set({data,updatedAt:data.updatedAt},{merge:false});cloud.lastSync=new Date().toISOString();renderBackup();return true}catch(e){console.warn('Cloud save',e);toast('Alteração salva no aparelho, mas a nuvem não respondeu.','warn');return false}}
-async function syncAfterLogin(){if(!cloud.user||!cloud.db)return false;try{const ref=cloud.db.collection('users').doc(cloud.user.uid).collection('app').doc('main');const snap=await ref.get();if(!snap.exists){await ref.set({data,updatedAt:data.updatedAt||new Date().toISOString()});cloud.lastSync=new Date().toISOString();toast('Dados locais enviados para sua conta.','ok');renderBackup();return true}else{const remote=snap.data();const remoteData=remote.data;const localTime=new Date(data.updatedAt||0).getTime();const remoteTime=new Date(remote.updatedAt||remoteData?.updatedAt||0).getTime();if(remoteData&&remoteTime>localTime){localStorage.setItem('minha_lista_v3_pre_cloud_merge',JSON.stringify(data));data={...data,...remoteData};localStorage.setItem('minha_lista_v3_data',JSON.stringify(data));toast('Dados mais recentes da conta foram restaurados.','ok')}else{const ok=await cloud.db.collection('users').doc(cloud.user.uid).collection('app').doc('main').set({data,updatedAt:data.updatedAt||new Date().toISOString()},{merge:false});if(!ok)throw Error('Falha ao gravar dados locais na nuvem')}cloud.lastSync=new Date().toISOString();renderAll();renderBackup();return true}}catch(e){console.warn('Cloud sync',e);toast('Conta conectada, mas a sincronização falhou. Seus dados locais continuam preservados.','danger');renderBackup();return false}}
-function load(){
- try{
-  const raw=localStorage.getItem('minha_lista_v3_data')||localStorage.getItem('minha_lista_v200_data');
-  if(raw)data={...data,...JSON.parse(raw)};
-  let saved=[];try{saved=JSON.parse(localStorage.getItem('minha_lista_categories')||'[]')}catch(e){}
-  data.categories=[...new Set([...(Array.isArray(data.categories)?data.categories:[]),...(Array.isArray(saved)?saved:[])])];
-  data.purchases ||= [];data.catalog ||= {};data.categories ||= ['Básico'];data.items ||= [];
-  Object.values(data.catalog).forEach(p=>{p.prices ||= [];p.purchaseDates ||= [];p.boughtCount ||= 0;p.totalQty ||= 0;p.lastPurchasedAt ||= null});
- }catch(e){toast('Dados locais danificados. Use um backup.','danger')}
-}
-function fillCategories(){
- const defaults=['Básico','Limpeza','Verduras','Bebidas','Açougue'];
- let saved=[];try{saved=JSON.parse(localStorage.getItem('minha_lista_categories')||'[]')}catch(e){}
- data.categories=[...new Set([...(Array.isArray(data.categories)?data.categories:[]),...(Array.isArray(saved)?saved:[]),...defaults])];
- const sel=$('prodCategory');if(sel){const current=sel.value;sel.innerHTML=data.categories.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');if(current&&data.categories.includes(current))sel.value=current}
- try{localStorage.setItem('minha_lista_categories',JSON.stringify(data.categories))}catch(e){}
-}
-function addCategory(){
- const name=prompt('Digite o nome da nova categoria:');if(name===null)return;
- const clean=name.trim().replace(/\s+/g,' ');
- if(!clean)return toast('Digite um nome para a categoria.','warn');
- if(clean.length>40)return toast('O nome da categoria deve ter até 40 caracteres.','warn');
- if(data.categories.some(c=>c.toLowerCase()===clean.toLowerCase()))return toast('Essa categoria já existe.','warn');
- data.categories.push(clean);data.categories.sort((a,b)=>a.localeCompare(b,'pt-BR'));
- try{localStorage.setItem('minha_lista_categories',JSON.stringify(data.categories))}catch(e){}
- persist();fillCategories();$('prodCategory').value=clean;toast(`Categoria "${clean}" criada com sucesso.`,'ok');
-}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function itemTotal(i){const qty=Number(i.qty)||0;const promo=Number(i.promo)||0;const price=Number(i.price)||0;return qty*(promo>0?promo:price)}
-function currentTotal(){return data.items.filter(i=>i.bought).reduce((a,i)=>a+itemTotal(i),0)}
-function renderList(){const q=($('search').value||'').toLowerCase().trim();const arr=data.items.filter(i=>!q||i.name.toLowerCase().includes(q));$('listItems').innerHTML=arr.length?arr.map(i=>`<div class="item"><input class="check" type="checkbox" ${i.bought?'checked':''} onchange="toggleBought('${i.id}')"><div class="itemmain"><b>${escapeHtml(i.name)} ${i.promo>0?'<span class="tag">PROMO</span>':''}</b><small>${escapeHtml(i.category)} • ${i.qty} × ${money(i.promo>0?i.promo:i.price)} • ${money(itemTotal(i))}</small></div><button class="iconbtn" onclick="removeItem('${i.id}')">🗑️</button></div>`).join(''):'<div class="empty">Nenhum item na lista.</div>';const total=currentTotal();$('bottomTotal').textContent=money(total);const budget=parseMoney($('budget').value)||data.budget||0;if(budget){const pct=Math.min(100,total/budget*100);$('budgetBar').style.width=pct+'%';$('budgetStatus').textContent=`${money(total)} de ${money(budget)} • ${pct.toFixed(0)}% do orçamento`;data.budget=budget}else{$('budgetBar').style.width='0';$('budgetStatus').textContent='Defina um orçamento para acompanhar o limite.'}}
-function suggestProducts(){const q=$('prodName').value.trim().toLowerCase();const box=$('suggestions');if(!q){box.hidden=true;return}const hits=Object.values(data.catalog).filter(p=>p.name.toLowerCase().includes(q)).sort((a,b)=>b.lastUsed-a.lastUsed).slice(0,6);if(!hits.length){box.hidden=true;return}box.innerHTML=hits.map(p=>`<div class="suggestion" onclick="useProduct('${p.id}')"><b>${escapeHtml(p.name)}</b><span>${escapeHtml(p.category)} • último ${money(p.lastPrice)}${p.avgPrice?` • média ${money(p.avgPrice)}`:''}</span></div>`).join('');box.hidden=false}
-function useProduct(id){const p=data.catalog[id];if(!p)return;$('prodName').value=p.name;$('prodCategory').value=p.category;$('prodPrice').value=(p.lastPrice||0).toFixed(2).replace('.',',');$('prodPromo').value='';$('suggestions').hidden=true;toast('Produto preenchido com seus dados anteriores.')}
-function addItem(){const name=$('prodName').value.trim();if(!name){toast('Digite o nome do produto.','danger');return}const qty=Number($('prodQty').value)||1;const price=parseMoney($('prodPrice').value);const promo=parseMoney($('prodPromo').value);const id=crypto.randomUUID?crypto.randomUUID():String(Date.now());data.items.push({id,name,category:$('prodCategory').value,qty,price,promo,bought:false});upsertCatalog(name,$('prodCategory').value,price);persist();$('prodName').value='';$('prodPrice').value='';$('prodPromo').value='';$('prodQty').value='1';renderAll();toast('Produto adicionado.')}
-function upsertCatalog(name,category,price,opts={}){const key=name.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim();let p=data.catalog[key]||{id:key,name,category,lastPrice:0,avgPrice:0,count:0,lastUsed:0,prices:[],purchaseDates:[],boughtCount:0,totalQty:0,lastPurchasedAt:null};p.name=name;p.category=category;p.lastPrice=price;if(price>0){p.prices=(p.prices||[]).concat(price).slice(-30);p.avgPrice=p.prices.reduce((a,b)=>a+b,0)/p.prices.length}p.count=(p.count||0)+1;p.lastUsed=Date.now();if(opts.purchased){const d=opts.date||new Date().toISOString();p.purchaseDates=(p.purchaseDates||[]).concat(d).slice(-12);p.boughtCount=(p.boughtCount||0)+1;p.totalQty=(p.totalQty||0)+(Number(opts.qty)||0);p.lastPurchasedAt=d}data.catalog[key]=p}
-function toggleBought(id){const i=data.items.find(x=>x.id===id);if(i){i.bought=!i.bought;persist();renderAll()}}
-function removeItem(id){confirmModal('Excluir item','Remover este produto da lista?',()=>{data.items=data.items.filter(i=>i.id!==id);persist();renderAll();toast('Item removido.','warn')})}
-function clearBought(){const n=data.items.filter(i=>i.bought).length;if(!n)return toast('Nenhum item marcado.','warn');confirmModal('Limpar marcados',`Remover ${n} item(ns) marcados da lista atual?`,()=>{data.items=data.items.filter(i=>!i.bought);persist();renderAll();toast('Itens marcados removidos.')})}
-function finalizePurchase(){const bought=data.items.filter(i=>i.bought);if(!bought.length)return toast('Marque os produtos comprados antes de finalizar.','warn');const total=bought.reduce((a,i)=>a+itemTotal(i),0);confirmModal('Finalizar compra',`Registrar esta compra de <b>${money(total)}</b> no histórico? Os produtos serão desmarcados, mas o registro ficará guardado.`,()=>{const purchase={id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),date:new Date().toISOString(),total,budget:data.budget||0,items:bought.map(i=>({...i,bought:true}))};data.purchases.unshift(purchase);bought.forEach(i=>upsertCatalog(i.name,i.category,i.price,{purchased:true,date:purchase.date,qty:i.qty}));data.items=data.items.map(i=>i.bought?{...i,bought:false}:i);persist();renderAll();go('history');toast('Compra registrada no histórico!')})}
-function renderHistory(){const q=($('historySearch').value||'').toLowerCase().trim();const arr=data.purchases.filter(p=>!q||new Date(p.date).toLocaleDateString('pt-BR').includes(q)||p.items.some(i=>i.name.toLowerCase().includes(q))).slice(0,100);$('historyItems').innerHTML=arr.length?arr.map(p=>`<div class="card history-card" onclick="showPurchase('${p.id}')"><div class="listrow"><div><strong>${new Date(p.date).toLocaleDateString('pt-BR')}</strong><div class="muted">${new Date(p.date).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})} • ${p.items.length} itens</div></div><strong>${money(p.total)}</strong></div></div>`).join(''):'<div class="card empty">Nenhuma compra registrada ainda.</div>'}
-function showPurchase(id){const p=data.purchases.find(x=>x.id===id);if(!p)return;const rows=p.items.map(i=>`<div class="listrow"><span>${escapeHtml(i.name)} × ${i.qty}</span><strong>${money(itemTotal(i))}</strong></div>`).join('');openModal('🧾 Detalhes da compra',`<p class="muted">${new Date(p.date).toLocaleString('pt-BR')}</p>${rows}<div class="listrow"><b>Total</b><strong>${money(p.total)}</strong></div>`,[{text:'Repetir compra',cls:'primary',fn:()=>repeatPurchase(p)},{text:'Fechar',cls:'secondary'}])}
-function repeatPurchase(p){p.items.forEach(i=>{data.items.push({...i,id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),bought:false})});persist();closeModal();go('list');toast('Itens da compra adicionados à lista atual.')}
-function renderCatalog(){const q=($('catalogSearch').value||'').toLowerCase().trim();const arr=Object.values(data.catalog).filter(p=>!q||p.name.toLowerCase().includes(q)).sort((a,b)=>b.lastUsed-a.lastUsed);$('catalogItems').innerHTML=arr.length?arr.map(p=>`<div class="listrow"><div><b>${escapeHtml(p.name)}</b><div class="muted">${escapeHtml(p.category)} • ${p.count} uso(s) • média ${money(p.avgPrice)}</div></div><div style="text-align:right"><strong>${money(p.lastPrice)}</strong><br><button class="btn secondary" style="padding:6px 9px;min-height:36px;margin-top:5px" onclick="quickUse('${p.id}')">Usar</button></div></div>`).join(''):'<div class="empty">Seu catálogo vai aparecer conforme você cadastra produtos.</div>'}
-function quickUse(id){useProduct(id);go('list');$('prodName').focus()}
-function avgPurchaseInterval(dates){const ds=(dates||[]).map(x=>new Date(x).getTime()).filter(Number.isFinite).sort((a,b)=>a-b);if(ds.length<2)return null;let sum=0;for(let i=1;i<ds.length;i++)sum+=ds[i]-ds[i-1];return sum/(ds.length-1)/86400000}
-function smartSuggestions(){const now=Date.now();const products=Object.values(data.catalog);const due=products.map(p=>{const interval=avgPurchaseInterval(p.purchaseDates);if(!interval||!p.lastPurchasedAt)return null;const days=(now-new Date(p.lastPurchasedAt).getTime())/86400000;return {...p,interval,days,dueScore:days/interval}}).filter(Boolean).filter(p=>p.dueScore>=.85).sort((a,b)=>b.dueScore-a.dueScore).slice(0,3);const priceAlerts=products.filter(p=>p.lastPrice>0&&p.avgPrice>0&&p.lastPrice>p.avgPrice*1.12).sort((a,b)=>(b.lastPrice/b.avgPrice)-(a.lastPrice/a.avgPrice)).slice(0,2);const frequent=products.filter(p=>(p.boughtCount||0)>=2).sort((a,b)=>(b.boughtCount||0)-(a.boughtCount||0)).slice(0,2);return {due,priceAlerts,frequent}}
-function renderSmartInsights(){const box=$('smartInsights');if(!box)return;const s=smartSuggestions();const cards=[];if(s.due.length){const p=s.due[0];cards.push(`<div class="smartCard"><b>🔔 Talvez esteja na hora</b><small><strong>${escapeHtml(p.name)}</strong><br>Você costuma comprar a cada ~${Math.round(p.interval)} dias. Já passaram ${Math.round(p.days)} dias.</small><button class="btn secondary" style="margin-top:8px;min-height:36px;padding:7px 10px" onclick="addSmartProduct('${p.id}')">Adicionar</button></div>`)}else{cards.push('<div class="smartCard"><b>✨ Aprendendo seus hábitos</b><small>Finalize algumas compras para o sistema começar a identificar padrões de recompra.</small></div>')}if(s.priceAlerts.length){const p=s.priceAlerts[0];const pct=((p.lastPrice/p.avgPrice-1)*100).toFixed(0);cards.push(`<div class="smartCard"><b>📈 Atenção ao preço</b><small><strong>${escapeHtml(p.name)}</strong><br>Último ${money(p.lastPrice)} • média ${money(p.avgPrice)} • ${pct}% acima da média.</small></div>`)}else{cards.push('<div class="smartCard"><b>💰 Preços sob controle</b><small>Nenhum aumento relevante foi identificado com os dados disponíveis.</small></div>')}if(s.frequent.length){const p=s.frequent[0];cards.push(`<div class="smartCard"><b>🏆 Produto frequente</b><small><strong>${escapeHtml(p.name)}</strong><br>Registrado em ${p.boughtCount} compra(s).</small></div>`)}box.innerHTML=cards.join('')}
-function addSmartProduct(id){const p=data.catalog[id];if(!p)return;const existing=data.items.find(i=>i.name===p.name);if(existing)return toast('Esse produto já está na lista.','warn');data.items.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),name:p.name,category:p.category,qty:1,price:p.lastPrice||0,promo:0,bought:false});persist();renderAll();go('list');toast(`${p.name} adicionado pela sugestão inteligente.`)}
-function renderHome(){const now=new Date();const month=data.purchases.filter(p=>{const d=new Date(p.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()});const spend=month.reduce((a,p)=>a+p.total,0);$('dashCurrent').textContent=money(currentTotal());$('dashPurchases').textContent=data.purchases.length;$('dashProducts').textContent=Object.keys(data.catalog).length;$('monthSpend').textContent=money(spend);$('maxPurchase').textContent=money(Math.max(0,...month.map(p=>p.total)));const cat={};month.flatMap(p=>p.items).forEach(i=>cat[i.category]=(cat[i.category]||0)+itemTotal(i));$('topCategory').textContent=Object.entries(cat).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';const prod={};month.flatMap(p=>p.items).forEach(i=>prod[i.name]=(prod[i.name]||0)+(Number(i.qty)||0));$('topProduct').textContent=Object.entries(prod).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—'}
-function renderBackup(){$('lastBackup').textContent=data.lastBackup?new Date(data.lastBackup).toLocaleString('pt-BR'):'Nunca';$('cloudStatus').textContent=cloud.enabled?(cloud.user?(cloud.lastSync?'Sincronizado':'Conectado'):'Pronto para login'):'Não configurada'}
-function renderAll(){fillCategories();renderList();renderHistory();renderCatalog();renderHome();renderSmartInsights();renderBackup();renderAccount();$('budget').value=data.budget?data.budget.toFixed(2).replace('.',','):''}
-function saveSnapshot(){data.lastBackup=new Date().toISOString();persist();const payload={format:'minha-lista-backup',schema:3,appVersion:APP_VERSION,createdAt:new Date().toISOString(),data};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`minha_lista_backup_${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);renderBackup();toast('Backup criado com sucesso!')}
-function restoreBackup(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{try{const p=JSON.parse(r.result);if(!p.data||!Array.isArray(p.data.items)||!Array.isArray(p.data.purchases))throw Error();const current=JSON.parse(JSON.stringify(data));localStorage.setItem('minha_lista_v3_pre_restore',JSON.stringify(current));data={...data,...p.data};persist();renderAll();toast('Backup restaurado. Uma cópia anterior foi preservada.')}catch(err){toast('Backup inválido ou incompatível.','danger')}e.target.value=''};r.readAsText(file)}
-function exportCSV(){const rows=[['Data','Produto','Categoria','Quantidade','Valor']];data.purchases.forEach(p=>p.items.forEach(i=>rows.push([new Date(p.date).toLocaleString('pt-BR'),i.name,i.category,i.qty,itemTotal(i).toFixed(2)])));const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\\n');const blob=new Blob(["\ufeff"+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='historico_compras.csv';a.click();URL.revokeObjectURL(a.href);toast('CSV exportado.')}
-function openModal(title,body,buttons){
- $('modalTitle').textContent=title;$('modalBody').innerHTML=body;
- $('modalActions').innerHTML=buttons.map((b,i)=>`<button class="btn ${b.cls||'secondary'}" data-i="${i}">${b.text}</button>`).join('');
- buttons.forEach((b,i)=>$('modalActions').children[i].onclick=async()=>{
-  const btn=$('modalActions').children[i];if(btn.disabled)return;
-  if(b.fn){btn.disabled=true;btn.style.pointerEvents='none';try{await b.fn();closeModal()}catch(e){console.error(e);closeModal();toast('Não foi possível concluir a ação.','danger')}}else closeModal();
- });
- $('modal').classList.add('open');
-}
-function closeModal(){$('modal').classList.remove('open')}
-function confirmModal(t,b,fn){openModal(t,b,[{text:'Cancelar',cls:'secondary'},{text:'Confirmar',cls:'primary',fn}])}
-function setAccountFeedback(message,type='info'){cloud.statusMessage=message;cloud.statusType=type;const el=$('accountFeedback');if(el){const icons={ok:'✅',warn:'⚠️',danger:'❌',info:'ℹ️'};el.className='accountStatus '+type;el.innerHTML=`<span>${icons[type]||'ℹ️'}</span><div>${escapeHtml(message)}</div>`}}
-function renderAccount(){const panel=$('accountPanel');if(!panel)return;if(cloud.user){const photo=cloud.user.photoURL||'./icon-192.png';panel.innerHTML=`<div style="display:flex;gap:14px;align-items:center"><img class="accountAvatar" src="${escapeHtml(photo)}" alt="Foto da conta"><div><strong style="font-size:1.05rem">${escapeHtml(cloud.user.displayName||'Usuário Google')}</strong><div class="muted">${escapeHtml(cloud.user.email||'')}</div><span class="tag">☁️ Conectado</span></div></div><div class="grid" style="margin-top:14px"><button class="btn primary" onclick="syncNow()">🔄 Sincronizar agora</button><button class="btn danger" onclick="logout()">🚪 Sair da conta</button></div>`;$('accountSyncStatus').textContent=cloud.lastSync?'Sincronizado':'Conectado';$('accountLastSync').textContent=cloud.lastSync?new Date(cloud.lastSync).toLocaleString('pt-BR'):'Ainda não sincronizado'}else if(cloud.enabled){panel.innerHTML=`<div style="text-align:center;padding:10px"><div style="font-size:2.6rem;animation:floatEmoji 3s ease-in-out infinite">☁️</div><h3>Conecte sua conta</h3><p class="muted">Entre com Google para vincular suas compras, produtos, histórico e configurações ao seu usuário.</p><button class="btn primary full" onclick="login()" id="googleLoginBtn">🔐 Entrar com Google</button></div>`;$('accountSyncStatus').textContent=cloud.loginPending?'Aguardando retorno do Google...':'Pronto para login';$('accountLastSync').textContent='Nunca'}else{panel.innerHTML=`<div style="text-align:center;padding:10px"><div style="font-size:2.6rem">🔒</div><h3>Conta ainda não configurada</h3><p class="muted">A conexão com o Firebase não foi inicializada. Verifique a configuração do aplicativo e a conexão com a internet.</p><button class="btn secondary full" onclick="openFirebaseHelp()">📘 Ver configuração</button></div>`;$('accountSyncStatus').textContent='Não configurada';$('accountLastSync').textContent='Nunca'}setAccountFeedback(cloud.statusMessage,cloud.statusType)}
-function openAccount(){go('account')}
-function openFirebaseHelp(){openModal('🔥 Configuração do Firebase','<p>1. Crie um projeto no Firebase.<br>2. Registre um app Web.<br>3. Ative Google em Authentication.<br>4. Crie o Cloud Firestore.<br>5. Publique as regras de segurança do arquivo <b>firestore.rules</b>.<br>6. A configuracao do Firebase ja esta incorporada neste aplicativo. Nao e necessario enviar nenhum arquivo separado para a configuracao do Firebase.</p><p class="muted">Depois publique no GitHub/Vercel e teste o botão Entrar com Google.</p>',[{text:'Fechar',cls:'secondary'}])}
-async function syncNow(){if(!cloud.user||!cloud.db){toast('Conecte uma conta primeiro.','warn');setAccountFeedback('Nenhuma conta Google está conectada no momento.','warn');return}setAccountFeedback('Sincronizando seus dados com o Firebase...','info');const ok=await saveCloud();if(ok){toast('Sincronização concluída com sucesso.','ok');setAccountFeedback('Conta conectada e dados sincronizados com sucesso.','ok')}else{setAccountFeedback('A conta está conectada, mas a sincronização falhou. Seus dados locais foram preservados.','danger')}renderAccount()}
-function toggleTheme(){const d=document.body;d.dataset.theme=d.dataset.theme==='dark'?'light':'dark';$('themeBtn').textContent=d.dataset.theme==='dark'?'🌙':'☀️';localStorage.setItem('minha_lista_theme',d.dataset.theme)}
-function firebaseErrorMessage(e){const code=e?.code||'';const map={'auth/unauthorized-domain':'Este domínio não está autorizado no Firebase. Adicione o domínio do Vercel em Authentication → Configurações → Domínios autorizados.','auth/popup-blocked':'O navegador bloqueou a janela de login. Tente novamente.','auth/popup-closed-by-user':'A janela do Google foi fechada antes da conclusão do login.','auth/cancelled-popup-request':'Outra tentativa de login já está em andamento.','auth/network-request-failed':'Falha de conexão com a internet.','auth/operation-not-allowed':'O login com Google não está ativado no Firebase.','auth/invalid-api-key':'A configuração do Firebase está inválida.','auth/invalid-continue-uri':'A URL de retorno do login não foi aceita pelo Firebase.','auth/internal-error':'O Firebase retornou um erro interno durante o login.','auth/invalid-credential':'A credencial do Google não foi aceita. Tente novamente.','auth/account-exists-with-different-credential':'Já existe uma conta usando este e-mail com outro método de login.'};return map[code]||`Não foi possível concluir o login Google${code?` (${code})`:''}. Verifique o console do navegador se o problema continuar.`}
-async function handleAuthUser(u,source='auth-state') {
-  cloud.user = u || null;
-  cloud.loginPending = false;
 
-  if (u) {
-    cloud.lastHandledUid = u.uid;
-    sessionStorage.removeItem('minha_lista_login_pending');
+try {
+  const valid = window.FIREBASE_CONFIG.apiKey !== "COLE_API_KEY" && window.FIREBASE_CONFIG.projectId !== "COLE_PROJECT_ID";
+  if(valid){
+    const fbApp=initializeApp(window.FIREBASE_CONFIG);
+    window.firebaseAuth=getAuth(fbApp);
+    window.firebaseDb=getFirestore(fbApp);
+    window.firebaseStorage=getStorage(fbApp);
+    window.firebaseStorageRef=ref; window.firebaseUploadString=uploadString; window.firebaseGetDownloadURL=getDownloadURL;
+    window.googleProvider=new GoogleAuthProvider();
+    window.firebaseReady=true;
+    getRedirectResult(window.firebaseAuth).catch(err=>console.warn("Google redirect:",err));
+    onAuthStateChanged(window.firebaseAuth, user=>window.handleFirebaseUser?.(user));
+  }
+} catch(err){ console.error("Firebase init:",err); }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    // A AUTENTICACAO TERMINA AQUI. O FIRESTORE NAO PODE TRANSFORMAR LOGIN BEM-SUCEDIDO EM ERRO.
-    setAccountFeedback(`Conta Google conectada: ${u.displayName || u.email || 'usuário Google'}.`, 'ok');
-    toast('Conta Google conectada com sucesso.', 'ok');
-    renderAccount();
-    renderBackup();
+    <script>
+      let appData = {
+        categories: ["Básico", "Limpeza", "Verduras", "Eletros"],
+        items: [],
+        budget: 0,
+        savedLists: {},
+        currentList: "",
+        profile: {name:"", avatar:"", cover:""},
+      };
 
-    // SINCRONIZACAO E UMA ETAPA SEPARADA E NAO BLOQUEANTE.
-    Promise.resolve().then(() => syncAfterLogin()).then(ok => {
-      if (ok) {
-        setAccountFeedback('Conta conectada e dados sincronizados com sucesso.', 'ok');
-      } else {
-        setAccountFeedback('Conta conectada. A sincronização com a nuvem falhou, mas seus dados locais foram preservados.', 'warn');
+      let collapsedCategories = [];
+      let currentFilter = "all";
+
+      window.onload = function () {
+        loadFromLocalStorage();
+        const savedTheme=localStorage.getItem('minha_lista_theme');
+        if(savedTheme){document.body.setAttribute('data-theme',savedTheme);const ti=document.querySelector('#theme-toggle .theme-icon');if(ti)ti.textContent=savedTheme==='dark'?'🌙':'☀️';}
+        ensureClearButtons();
+        updateClearButtonsVisibility();
+        document.getElementById("budget-input").value =
+          appData.budget > 0
+            ? appData.budget.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : "";
+        renderCategorySelect();
+        syncCategorySelects();
+        renderSavedListsSelect();
+        renderList();
+        syncCategorySelects();
+        updateClearButtonsVisibility();
+        renderProfile();
+      };
+
+      function showToast(message, type = "success") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+
+        let icon = "✅";
+        if (type === "danger") icon = "🚨";
+        if (type === "warning") icon = "⚠️";
+
+        toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+          toast.remove();
+        }, 2500);
       }
-      renderAccount();
-    }).catch(e => {
-      console.warn('Sync após autenticação', e);
-      setAccountFeedback('Conta conectada. A sincronização ficará pendente.', 'warn');
-      renderAccount();
-    });
-  } else {
-    cloud.lastHandledUid = null;
-    sessionStorage.removeItem('minha_lista_login_pending');
-    renderBackup();
-    renderAccount();
-  }
-}
-async function setupFirebase() {
-  if (!FIREBASE_CONFIG || !window.firebase) {
-    cloud.enabled = false;
-    setAccountFeedback('Firebase não está disponível neste momento.', 'danger');
-    renderAccount();
-    return;
-  }
 
-  try {
-    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-    cloud.db = firebase.firestore();
-    cloud.auth = firebase.auth();
-    cloud.enabled = true;
+      function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById("theme-toggle");
+        const icon = btn.querySelector(".theme-icon") || btn;
+        btn.classList.remove("theme-spin");
+        void btn.offsetWidth;
+        btn.classList.add("theme-spin");
+        if (body.getAttribute("data-theme") === "dark") {
+          body.setAttribute("data-theme", "light");
+          icon.innerText = "☀️";
+          localStorage.setItem("minha_lista_theme", "light");
+          showToast("Modo claro ativado");
+        } else {
+          body.setAttribute("data-theme", "dark");
+          icon.innerText = "🌙";
+          localStorage.setItem("minha_lista_theme", "dark");
+          showToast("Modo escuro ativado");
+        }
+        setTimeout(()=>btn.classList.remove("theme-spin"),600);
+      }
 
-    await cloud.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      function openCustomModal(title, bodyHtml, buttons) {
+        const modal = document.getElementById("custom-modal");
+        document.getElementById("modal-title").innerText = title;
+        document.getElementById("modal-body").innerHTML = bodyHtml;
+        const actionsContainer = document.getElementById("modal-actions");
+        actionsContainer.innerHTML = "";
 
-    // O OBSERVER E A UNICA FONTE OFICIAL DO ESTADO DA CONTA.
-    cloud.auth.onAuthStateChanged(user => {
-      handleAuthUser(user, 'auth-state').catch(e => {
-        console.error('Erro no estado de autenticação', e);
-        setAccountFeedback('A conta foi autenticada, mas houve um erro ao atualizar a interface.', 'danger');
-        renderAccount();
+        buttons.forEach((btn) => {
+          const b = document.createElement("button");
+          b.className = btn.className || "btn-primary btn-sm";
+          b.innerText = btn.text;
+          b.onclick = () => {
+            closeCustomModal();
+            if (btn.action) btn.action();
+          };
+          actionsContainer.appendChild(b);
+        });
+
+        modal.style.display = "flex";
+        modal.offsetHeight;
+        modal.classList.add("active");
+      }
+
+      function closeCustomModal() {
+        const modal = document.getElementById("custom-modal");
+        modal.classList.remove("active");
+        setTimeout(() => {
+          modal.style.display = "none";
+        }, 300);
+      }
+
+      function checkClear(input) {
+        if (!input || input.type === "hidden" || input.type === "checkbox" || input.type === "radio" || input.disabled) return;
+        const btn = input.nextElementSibling;
+        if (btn && (btn.classList.contains("clear-btn") || btn.classList.contains("clear-search"))) {
+          const hasValue = String(input.value || "").length > 0;
+          btn.classList.toggle("visible", hasValue);
+          btn.style.display = hasValue ? "flex" : "none";
+        }
+      }
+
+      function clearInput(id) {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.value = "";
+        input.dispatchEvent(new Event("input", {bubbles:true}));
+        if (id === "budget-input") updateBudget();
+        if (id === "search-input") renderList();
+        if (id === "prod-name") input.classList.remove("input-error");
+        checkClear(input);
+        input.focus();
+      }
+
+      function updateClearButtonsVisibility() {
+        document.querySelectorAll(".input-container input").forEach((input) => checkClear(input));
+      }
+
+      function ensureClearButtons() {
+        document.querySelectorAll('input[type="text"], input[type="number"], input[type="search"], input[inputmode="numeric"]').forEach((input) => {
+          if (input.type === "hidden" || input.closest('.search-wrap')) return;
+          let container = input.parentElement;
+          if (!container.classList.contains('input-container')) {
+            container = document.createElement('div');
+            container.className = 'input-container';
+            input.parentNode.insertBefore(container, input);
+            container.appendChild(input);
+          }
+          if (!container.querySelector('.clear-btn')) {
+            const btn=document.createElement('button');
+            btn.type='button'; btn.className='clear-btn'; btn.innerHTML='&times;';
+            btn.setAttribute('aria-label','Limpar campo');
+            btn.addEventListener('click',()=>{input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));checkClear(input);input.focus();});
+            container.appendChild(btn);
+          }
+          checkClear(input);
+        });
+      }
+
+      function formatCurrencyInput(input) {
+        let value = input.value.replace(/\D/g, "");
+        if (value === "") {
+          input.value = "";
+          return;
+        }
+        let number = parseFloat(value) / 100;
+        input.value = number.toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+      }
+
+      function parseCurrencyValue(str) {
+        if (!str) return 0;
+        let clean = str.replace(/\./g, "").replace(",", ".");
+        return parseFloat(clean) || 0;
+      }
+
+      function saveToLocalStorage() {
+        localStorage.setItem("minha_lista_v200_data", JSON.stringify(appData));
+      }
+
+      function loadFromLocalStorage() {
+        let saved = localStorage.getItem("minha_lista_v200_data");
+        if (!saved) saved = localStorage.getItem("minha_lista_v170_data");
+        if (!saved) saved = localStorage.getItem("minha_lista_v160_data");
+        if (!saved) saved = localStorage.getItem("minha_lista_v150_data");
+
+        if (saved) {
+          appData = JSON.parse(saved);
+          if (!appData.savedLists) appData.savedLists = {};
+          if (appData.currentList === undefined) appData.currentList = "";
+          if (!appData.profile) appData.profile = {name:"", avatar:"", cover:""};
+          if (appData.profile.name === undefined) appData.profile.name = "";
+          if (appData.profile.avatar === undefined) appData.profile.avatar = "";
+          if (appData.profile.cover === undefined) appData.profile.cover = "";
+        }
+      }
+
+      function updateBudget() {
+        const val =
+          parseCurrencyValue(document.getElementById("budget-input").value) ||
+          0;
+        appData.budget = val;
+        saveToLocalStorage();
+        renderList();
+      }
+
+      function renderCategorySelect() {
+        const select = document.getElementById("prod-category");
+        select.innerHTML = "";
+        appData.categories.forEach((cat) => {
+          const opt = document.createElement("option");
+          opt.value = cat;
+          opt.innerText = cat;
+          select.appendChild(opt);
+        });
+        syncCategorySelects();
+      }
+
+      function addCategory() {
+        const input = document.getElementById("new-category-name");
+        const name = input.value.trim();
+        if (!name) {
+          input.classList.add("input-error");
+          showToast("Digite o nome da categoria!", "danger");
+          return;
+        }
+        if (appData.categories.includes(name)) {
+          showToast("Essa categoria já existe!", "warning");
+          return;
+        }
+
+        appData.categories.push(name);
+        input.value = "";
+        checkClear(input);
+        saveToLocalStorage();
+        renderCategorySelect();
+        renderList();
+        showToast(`Categoria "${name}" adicionada!`);
+      }
+
+      function deleteCategory(catName) {
+        openCustomModal(
+          "Excluir Categoria",
+          `Deseja excluir a categoria "<strong>${catName}</strong>" e seus itens associados?`,
+          [
+            { text: "Cancelar", className: "btn-warning btn-sm" },
+            {
+              text: "Excluir",
+              className: "btn-danger btn-sm",
+              action: () => {
+                appData.categories = appData.categories.filter(
+                  (c) => c !== catName,
+                );
+                appData.items = appData.items.filter(
+                  (i) => i.category !== catName,
+                );
+                saveToLocalStorage();
+                renderCategorySelect();
+                renderList();
+                showToast("Categoria removida.", "danger");
+              },
+            },
+          ],
+        );
+      }
+
+      function toggleCategoryCollapse(catName) {
+        const idx = collapsedCategories.indexOf(catName);
+        if (idx > -1) {
+          collapsedCategories.splice(idx, 1);
+        } else {
+          collapsedCategories.push(catName);
+        }
+        renderList();
+      }
+
+      function toggleItemBought(id) {
+        const item = appData.items.find((i) => i.id === id);
+        if (item) {
+          item.bought = !item.bought;
+          saveToLocalStorage();
+          renderList();
+          showToast(
+            item.bought
+              ? "Item colocado no carrinho!"
+              : "Item removido do carrinho!",
+          );
+        }
+      }
+
+      function toggleOffer(){
+        const box=document.getElementById('offer-fields');
+        const show=box.classList.toggle('show');
+        document.getElementById('offer-toggle-btn').innerText=show?'Ocultar':'Adicionar';
+        document.getElementById('category-normal-wrap').style.display=show?'none':'block';
+        if(show) document.getElementById('prod-category').value=document.getElementById('prod-category-normal').value;
+      }
+      function syncCategorySelects(){
+        const a=document.getElementById('prod-category'), b=document.getElementById('prod-category-normal');
+        if(!a||!b)return;
+        b.innerHTML=''; appData.categories.forEach(cat=>{const o=document.createElement('option');o.value=cat;o.textContent=cat;b.appendChild(o)});
+        b.value=a.value || appData.categories[0] || '';
+      }
+      function openUtilities(){document.getElementById('utilities-modal').classList.add('show');renderSavedListsSelect()}
+      function closeUtilities(){document.getElementById('utilities-modal').classList.remove('show')}
+      function toggleShoppingMode(){document.body.classList.toggle('shopping-mode');showToast(document.body.classList.contains('shopping-mode')?'Modo compra ativado':'Modo normal ativado')}
+      function finalizePurchase(){
+        if(!appData.items.length){showToast('Adicione produtos antes de finalizar.','warning');return}
+        const bought=appData.items.filter(i=>i.bought);
+        if(!bought.length){showToast('Marque os produtos que você realmente pegou.','warning');return}
+        const name=(document.getElementById('save-list-name')?.value||'').trim() || `Compra ${new Date().toLocaleDateString('pt-BR')}`;
+        appData.savedLists[name]={items:JSON.parse(JSON.stringify(bought)),categories:JSON.parse(JSON.stringify(appData.categories)),budget:appData.budget,date:new Date().toLocaleString('pt-BR')};
+        appData.currentList=name;saveToLocalStorage();renderSavedListsSelect();
+        openCustomModal('✅ Compra finalizada',`<p><strong>${bought.length}</strong> produtos foram registrados.</p><p>Total no carrinho: <strong>R$ ${bought.reduce((s,i)=>{const pricing=getItemPricing(i);return s+pricing.finalTotal},0).toFixed(2).replace('.',',')}</strong></p>`,[{text:'Fechar',className:'btn-primary btn-sm'}]);
+      }
+
+      function saveProduct() {
+        const id = document.getElementById("edit-id").value;
+        const nameInput = document.getElementById("prod-name");
+        const name = nameInput.value.trim();
+        const category = document.getElementById("prod-category").value || document.getElementById("prod-category-normal").value;
+        const qty = parseFloat(document.getElementById("prod-qty").value) || 1;
+        const price =
+          parseCurrencyValue(document.getElementById("prod-price").value) || 0;
+        const promoQty =
+          parseInt(document.getElementById("prod-promo-qty").value) || 0;
+        const promoPrice =
+          parseCurrencyValue(
+            document.getElementById("prod-promo-price").value,
+          ) || 0;
+        const promoApplied = document.getElementById("prod-promo-apply")?.checked !== false;
+
+        if (!name) {
+          nameInput.classList.add("input-error");
+          showToast("Insira o nome do produto!", "danger");
+          return;
+        }
+
+        let wasBought = false;
+        if (id) {
+          const oldItem = appData.items.find((i) => i.id === parseInt(id));
+          if (oldItem) wasBought = oldItem.bought;
+        }
+
+        const itemData = {
+          id: id ? parseInt(id) : Date.now(),
+          name,
+          category,
+          qty,
+          price,
+          promoQty,
+          promoPrice,
+          promoApplied,
+          bought: wasBought,
+        };
+
+        if (id) {
+          const index = appData.items.findIndex((i) => i.id === parseInt(id));
+          appData.items[index] = itemData;
+          showToast("Produto atualizado!");
+        } else {
+          appData.items.push(itemData);
+          showToast("Produto adicionado!");
+        }
+
+        resetForm();
+        saveToLocalStorage();
+        renderList();
+      }
+
+      function editProduct(id) {
+        const item = appData.items.find((i) => i.id === id);
+        if (!item) return;
+
+        document.getElementById("edit-id").value = item.id;
+        document.getElementById("prod-name").value = item.name;
+        document.getElementById("prod-category").value = item.category;
+        if(document.getElementById("prod-category-normal")) document.getElementById("prod-category-normal").value = item.category;
+        document.getElementById("prod-qty").value = item.qty;
+        document.getElementById("prod-price").value =
+          item.price > 0
+            ? item.price.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : "";
+        document.getElementById("prod-promo-qty").value = item.promoQty || "";
+        document.getElementById("prod-promo-price").value =
+          item.promoPrice > 0
+            ? item.promoPrice.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : "";
+        if(document.getElementById("prod-promo-apply")) document.getElementById("prod-promo-apply").checked = item.promoApplied !== false;
+        if(item.promoQty > 0 || item.promoPrice > 0){ document.getElementById("offer-fields")?.classList.add("show"); document.getElementById("offer-toggle-btn").innerText="Ocultar"; document.getElementById("category-normal-wrap").style.display="none"; }
+        updatePromoPreview();
+
+        document.getElementById("form-title").innerText = "✏️ Editar Produto";
+        document.getElementById("btn-save-prod").innerText =
+          "Atualizar Produto";
+        document.getElementById("btn-cancel-edit").style.display =
+          "inline-flex";
+
+        updateClearButtonsVisibility();
+        window.scrollTo({ top: 200, behavior: "smooth" });
+      }
+
+      function deleteProduct(id) {
+        // Encontra o produto para pegar o nome dele
+        const item = appData.items.find((i) => i.id === id);
+        if (!item) return;
+
+        // Abre o modal de confirmação com o nome do produto colorido
+        openCustomModal(
+          "Excluir Produto",
+          `Deseja realmente excluir o produto <span style="color: #e71d36; font-weight: bold;">"${item.name}"</span>?`,
+          [
+            { text: "Cancelar", className: "btn-warning btn-sm" },
+            {
+              text: "Excluir",
+              className: "btn-danger btn-sm",
+              action: () => {
+                // Executa a exclusão apenas se clicar em Excluir
+                appData.items = appData.items.filter((i) => i.id !== id);
+                saveToLocalStorage();
+                renderList();
+                showToast("Produto removido.", "danger");
+              },
+            },
+          ],
+        );
+      }
+
+      function resetForm() {
+        document.getElementById("edit-id").value = "";
+        document.getElementById("prod-name").value = "";
+        document.getElementById("prod-name").classList.remove("input-error");
+        document.getElementById("prod-qty").value = "1";
+        document.getElementById("prod-price").value = "";
+        document.getElementById("prod-promo-qty").value = "";
+        document.getElementById("prod-promo-price").value = "";
+        document.getElementById("prod-promo-qty").value = "";
+        if(document.getElementById("prod-promo-apply")) document.getElementById("prod-promo-apply").checked = true;
+        if(document.getElementById("promo-preview")) document.getElementById("promo-preview").style.display = "none";
+        if(document.getElementById("promo-apply-wrap")) document.getElementById("promo-apply-wrap").style.display = "none";
+        document.getElementById("form-title").innerText =
+          "🛒 Adicionar Produto";
+        document.getElementById("btn-save-prod").innerText = "Salvar na Lista";
+        document.getElementById("btn-cancel-edit").style.display = "none";
+        updateClearButtonsVisibility();
+        document.getElementById("offer-fields")?.classList.remove("show");
+        if(document.getElementById("offer-toggle-btn")) document.getElementById("offer-toggle-btn").innerText="Adicionar";
+        if(document.getElementById("category-normal-wrap")) document.getElementById("category-normal-wrap").style.display="block";
+      }
+
+      function setFilter(filterName) {
+        currentFilter = filterName;
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.filter === filterName);
+        });
+        renderList();
+      }
+
+      function getItemPricing(item) {
+        const qty = Number(item.qty) || 0;
+        const normalUnit = Number(item.price) || 0;
+        const promoQty = Number(item.promoQty) || 0;
+        const promoUnit = Number(item.promoPrice) || 0;
+        const eligible = promoQty >= 2 && promoUnit > 0 && qty >= promoQty;
+        const applied = eligible && item.promoApplied !== false;
+        const normalTotal = qty * normalUnit;
+        const promoTotal = qty * promoUnit;
+        const finalTotal = applied ? promoTotal : normalTotal;
+        return {eligible, applied, normalTotal, promoTotal, finalTotal, savings: Math.max(0, normalTotal - promoTotal), normalUnit, promoUnit, promoQty};
+      }
+
+      function updatePromoPreview(){
+        const box=document.getElementById('promo-preview');
+        const wrap=document.getElementById('promo-apply-wrap');
+        if(!box)return;
+        const qty=Number(document.getElementById('prod-qty')?.value)||0;
+        const price=parseCurrencyValue(document.getElementById('prod-price')?.value)||0;
+        const promoQty=Number(document.getElementById('prod-promo-qty')?.value)||0;
+        const promoPrice=parseCurrencyValue(document.getElementById('prod-promo-price')?.value)||0;
+        if(promoQty<2||promoPrice<=0||price<=0){box.style.display='none';if(wrap)wrap.style.display='none';return;}
+        const normalTotal=qty*price;
+        const promoTotal=qty*promoPrice;
+        const savings=normalTotal-promoTotal;
+        box.style.display='block';
+        box.innerHTML = qty>=promoQty
+          ? `🏷️ <strong>Oferta disponível para ${qty} unidade(s)</strong><br>Sem oferta: <strong>${formatMoney(normalTotal)}</strong> · Com oferta: <strong>${formatMoney(promoTotal)}</strong> · <span class="saving-value">Economia: ${formatMoney(Math.max(0,savings))}</span>`
+          : `🏷️ <strong>Oferta a partir de ${promoQty} unidades</strong><br>Com ${qty||0} unidade(s), o preço normal será aplicado. Se levar ${promoQty}, a economia será <span class="saving-value">${formatMoney(Math.max(0,(promoQty*price)-(promoQty*promoPrice)))}</span>.`;
+        if(wrap)wrap.style.display=qty>=promoQty?'block':'none';
+      }
+
+      function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
+      function renderSmartSuggestions(){
+        const box=document.getElementById('smart-suggestions');
+        const list=document.getElementById('smart-suggestion-list');
+        if(!box||!list)return;
+        const counts=new Map();
+        Object.values(appData.savedLists||{}).forEach(listData=>{
+          (listData.items||[]).forEach(item=>{
+            const key=(item.name||'').trim().toLowerCase();
+            if(!key)return;
+            const current=counts.get(key)||{name:item.name,count:0,last:item};
+            current.count++;
+            current.last=item;
+            counts.set(key,current);
+          });
+        });
+        const existing=new Set((appData.items||[]).map(i=>(i.name||'').trim().toLowerCase()));
+        const suggestions=[...counts.values()].filter(x=>x.count>=2&&!existing.has(x.name.toLowerCase())).sort((a,b)=>b.count-a.count).slice(0,5);
+        if(!suggestions.length){box.style.display='none';return;}
+        box.style.display='block';
+        list.innerHTML=suggestions.map((x,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-color)"><div style="flex:1"><b style="font-size:12px">${esc(x.name)}</b><div class="counter-text">Apareceu ${x.count}x no seu histórico</div></div><button class="btn btn-primary btn-sm" onclick="addSuggestedProduct(${i})">+ Adicionar</button></div>`).join('');
+        box.dataset.suggestions=JSON.stringify(suggestions.map(x=>x.last));
+      }
+      function addSuggestedProduct(index){
+        const box=document.getElementById('smart-suggestions');
+        const data=JSON.parse(box?.dataset.suggestions||'[]'); const item=data[index]; if(!item)return;
+        appData.items.push({...JSON.parse(JSON.stringify(item)),id:Date.now()+index,bought:false});
+        saveToLocalStorage(); renderList(); showToast(`${item.name} adicionado pela sugestão.`);
+      }
+
+      function renderList() {
+        renderSmartSuggestions();
+        const container = document.getElementById("list-container");
+        container.innerHTML = "";
+
+        const searchTerm = document
+          .getElementById("search-input")
+          .value.trim()
+          .toLowerCase();
+        const filtroAtivo = searchTerm !== "" || currentFilter !== "all";
+
+        let totalGeral = 0;
+        let totalCarrinho = 0;
+        let categoryCosts = {};
+        let categoriasRenderizadas = 0;
+
+        appData.categories.forEach((c) => (categoryCosts[c] = 0));
+
+        appData.categories.forEach((cat) => {
+          const catItems = appData.items.filter((i) => i.category === cat);
+          const isCollapsed = collapsedCategories.includes(cat);
+
+          let visibleItemsHtml = "";
+          let visibleCount = 0;
+
+          catItems.forEach((item) => {
+            const pricing = getItemPricing(item);
+            const itemTotal = pricing.finalTotal;
+            const usouPromocao = pricing.applied;
+
+            totalGeral += itemTotal;
+            categoryCosts[cat] += itemTotal;
+            if (item.bought) totalCarrinho += itemTotal;
+
+            const passaStatus =
+              currentFilter === "all"
+                ? true
+                : currentFilter === "bought"
+                  ? item.bought
+                  : !item.bought;
+            const passaBusca =
+              searchTerm === "" || item.name.toLowerCase().includes(searchTerm);
+
+            if (!passaStatus || !passaBusca) return;
+
+            visibleCount++;
+            visibleItemsHtml += `
+                        <div class="product-item ${item.bought ? "bought" : ""}">
+                            <div class="product-left">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" ${item.bought ? "checked" : ""} onclick="toggleItemBought(${item.id})">
+                                </label>
+                                <div class="product-details">
+                                    <h4 class="product-title">${item.name}</h4>
+                                    <p>
+                                        Qtd: ${item.qty} x R$ ${(usouPromocao ? pricing.promoUnit : pricing.normalUnit).toFixed(2)}
+                                        ${pricing.eligible ? (usouPromocao ? '<span class="promo-badge">Oferta aplicada</span>' : '<span class="promo-badge">Oferta disponível</span>') : ""}
+                                    </p>
+                                    <p style="font-weight:600; margin-top:2px;">Subtotal: R$ ${itemTotal.toFixed(2)}${pricing.eligible ? ` • ${usouPromocao ? `Economizou R$ ${pricing.savings.toFixed(2)}` : `Sem oferta: R$ ${pricing.normalTotal.toFixed(2)}`}` : ''}</p>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn-primary btn-sm" onclick="editProduct(${item.id})">✏️</button>
+                                <button class="btn-danger btn-sm" onclick="deleteProduct(${item.id})">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+          });
+
+          if (filtroAtivo && catItems.length > 0 && visibleCount === 0) {
+            return;
+          }
+
+          categoriasRenderizadas++;
+
+          const catDiv = document.createElement("div");
+          catDiv.style.marginBottom = "24px";
+
+          const catHeader = document.createElement("div");
+          catHeader.className = "category-title";
+          catHeader.style.cursor = "pointer";
+          catHeader.style.userSelect = "none";
+          catHeader.innerHTML = `
+                    <div onclick="toggleCategoryCollapse('${cat}')" style="display:flex; align-items:center; gap:8px; flex:1;">
+                        <span style="font-size:0.8rem;">${isCollapsed ? "⬆️" : "⬇️"}</span>
+                        <span>${cat} (${catItems.length})</span>
+                    </div>
+                    <button class="btn-danger btn-sm" onclick="deleteCategory('${cat}')">Deletar Cat</button>
+                `;
+          catDiv.appendChild(catHeader);
+
+          const itemsWrapper = document.createElement("div");
+          itemsWrapper.style.display = isCollapsed ? "none" : "block";
+
+          if (catItems.length === 0) {
+            itemsWrapper.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted); font-style:italic; padding-left:10px; padding-bottom:10px;">Nenhum produto cadastrado.</p>`;
+          } else if (visibleCount === 0) {
+            itemsWrapper.innerHTML = `<p style="font-size:0.85rem; color:var(--text-muted); font-style:italic; padding-left:10px; padding-bottom:10px;">Nenhum produto encontrado com os filtros atuais.</p>`;
+          } else {
+            itemsWrapper.innerHTML = visibleItemsHtml;
+          }
+
+          catDiv.appendChild(itemsWrapper);
+          container.appendChild(catDiv);
+        });
+
+        if (categoriasRenderizadas === 0 && appData.items.length > 0) {
+          container.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-style:italic; padding:20px;">Nenhum produto encontrado para a busca/filtro selecionado.</p>`;
+        }
+
+        const boughtCount = appData.items.filter((i) => i.bought).length;
+        document.getElementById("cart-counter").innerText =
+          `🛒 ${boughtCount} de ${appData.items.length} itens no carrinho`;
+
+        document.getElementById("total-value").innerText =
+          `R$ ${totalGeral.toFixed(2)}`;
+        document.getElementById("total-cart-value").innerText =
+          `R$ ${totalCarrinho.toFixed(2)}`;
+
+        const budgetText = document.getElementById("budget-text");
+        const budgetBar = document.getElementById("budget-progress");
+        const alertBadge = document.getElementById("budget-alert-badge");
+
+        document.getElementById("total-value").style.color = "var(--text-main)";
+
+        if (appData.budget > 0) {
+          budgetText.innerText = `Orçamento: R$ ${appData.budget.toFixed(2)}`;
+          let pct = (totalCarrinho / appData.budget) * 100;
+          budgetBar.style.width = `${Math.min(pct, 100)}%`;
+
+          budgetBar.className = "progress-bar";
+          alertBadge.style.display = "inline-block";
+
+          if (totalCarrinho > appData.budget) {
+            budgetBar.classList.add("danger");
+            alertBadge.innerText = "🚨 LIMITE NO CARRINHO EXCEDIDO!";
+            alertBadge.style.backgroundColor = "var(--danger-color)";
+            document.getElementById("total-cart-value").style.color =
+              "var(--danger-color)";
+          } else if (pct >= 90) {
+            budgetBar.classList.add("warning");
+            alertBadge.innerText = "⚠️ Carrinho no limite (90%+)";
+            alertBadge.style.backgroundColor = "var(--warning-color)";
+            document.getElementById("total-cart-value").style.color =
+              "var(--warning-color)";
+          } else {
+            alertBadge.innerText = "✅ Carrinho dentro da Meta";
+            alertBadge.style.backgroundColor = "var(--success-color)";
+            document.getElementById("total-cart-value").style.color =
+              "var(--success-color)";
+          }
+        } else {
+          budgetText.innerText = "Orçamento não definido";
+          budgetBar.style.width = "0%";
+          alertBadge.style.display = "none";
+          document.getElementById("total-cart-value").style.color =
+            "var(--success-color)";
+        }
+
+        renderCategoryChart(categoryCosts, totalGeral);
+        const heroCart=document.getElementById("hero-cart"), heroTotal=document.getElementById("hero-total"), heroRemaining=document.getElementById("hero-remaining"), heroLabel=document.getElementById("hero-label");
+        if(heroCart) heroCart.innerText=`R$ ${totalCarrinho.toFixed(2)}`;
+        if(heroTotal) heroTotal.innerText=`R$ ${totalGeral.toFixed(2)}`;
+        if(heroRemaining){ const r=appData.budget-totalCarrinho; heroRemaining.innerText=appData.budget>0?`R$ ${Math.abs(r).toFixed(2)}`:`R$ ${totalCarrinho.toFixed(2)}`; heroLabel.innerText=appData.budget>0?(r>=0?`Ainda disponível • ${((totalCarrinho/appData.budget)*100).toFixed(0)}% usado`:`Acima do limite • ${((totalCarrinho/appData.budget)*100).toFixed(0)}% usado`):`Defina seu limite para acompanhar a compra`; }
+      }
+
+      function renderCategoryChart(categoryCosts, totalGeral) {
+        const chartBarsContainer = document.getElementById("category-bars");
+        chartBarsContainer.innerHTML = "";
+
+        if (totalGeral === 0) {
+          chartBarsContainer.innerHTML =
+            '<p style="font-size:0.8rem; color:var(--text-muted); font-style:italic;">Adicione produtos para ver os gráficos.</p>';
+          return;
+        }
+
+        const sortedCategories = Object.entries(categoryCosts)
+          .map(([name, value]) => ({
+            name,
+            value,
+            pct: (value / totalGeral) * 100,
+          }))
+          .sort((a, b) => b.value - a.value);
+
+        sortedCategories.forEach((cat) => {
+          if (cat.value > 0) {
+            const itemHtml = `
+                        <div class="cat-chart-item">
+                            <div class="cat-chart-label">
+                                <span>${cat.name}</span>
+                                <span>R$ ${cat.value.toFixed(2)} (${cat.pct.toFixed(1)}%)</span>
+                            </div>
+                            <div class="cat-chart-bar-bg">
+                                <div class="cat-chart-bar-fill" style="width: ${cat.pct}%"></div>
+                            </div>
+                        </div>
+                    `;
+            chartBarsContainer.insertAdjacentHTML("beforeend", itemHtml);
+          }
+        });
+      }
+
+      function saveCurrentListInternal() {
+        const nameInput = document.getElementById("save-list-name");
+        const name = nameInput.value.trim();
+        if (!name) {
+          showToast("Digite um nome para a lista!", "danger");
+          return;
+        }
+
+        appData.savedLists[name] = {
+          items: JSON.parse(JSON.stringify(appData.items)),
+          categories: JSON.parse(JSON.stringify(appData.categories)),
+          budget: appData.budget,
+        };
+        appData.currentList = name;
+
+        nameInput.value = "";
+        checkClear(nameInput);
+        saveToLocalStorage();
+        renderSavedListsSelect();
+        showToast(`Lista "${name}" arquivada na memória do aparelho!`);
+      }
+
+      function renderSavedListsSelect() {
+        const select = document.getElementById("saved-lists-select");
+        select.innerHTML =
+          '<option value="">-- Carregar do Aparelho --</option>';
+        for (let listName in appData.savedLists) {
+          const opt = document.createElement("option");
+          opt.value = listName;
+          opt.innerText = listName;
+          if (appData.currentList === listName) opt.selected = true;
+          select.appendChild(opt);
+        }
+      }
+
+      function resetSearchAndFilters() {
+        document.getElementById("search-input").value = "";
+        currentFilter = "all";
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.filter === "all");
+        });
+      }
+
+      function loadListInternal() {
+        const select = document.getElementById("saved-lists-select");
+        const selectedName = select.value;
+        if (!selectedName) return;
+
+        openCustomModal(
+          "Carregar Lista",
+          `Carregar a lista "<strong>${selectedName}</strong>"? Isto irá substituir a lista atual em exibição.`,
+          [
+            {
+              text: "Cancelar",
+              className: "btn-warning btn-sm",
+              action: () => {
+                select.value = appData.currentList || "";
+              },
+            },
+            {
+              text: "Carregar",
+              className: "btn-primary btn-sm",
+              action: () => {
+                const saved = appData.savedLists[selectedName];
+                appData.items = JSON.parse(JSON.stringify(saved.items));
+                appData.categories = JSON.parse(
+                  JSON.stringify(saved.categories),
+                );
+                appData.budget = saved.budget || 0;
+                appData.currentList = selectedName;
+
+                document.getElementById("budget-input").value =
+                  appData.budget > 0
+                    ? appData.budget.toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })
+                    : "";
+                resetSearchAndFilters();
+                saveToLocalStorage();
+                renderCategorySelect();
+                renderSavedListsSelect();
+                renderList();
+                updateClearButtonsVisibility();
+                showToast(`Lista "${selectedName}" carregada.`);
+              },
+            },
+          ],
+        );
+      }
+
+      function exportData() {
+        if (appData.items.length === 0 && appData.categories.length === 4) {
+          showToast("Sua lista está vazia para exportar backup!", "warning");
+          return;
+        }
+        const dataStr =
+          "data:text/json;charset=utf-8," +
+          encodeURIComponent(JSON.stringify(appData));
+        const downloadAnchor = document.createElement("a");
+        const dataAtual = new Date().toISOString().slice(0, 10);
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute(
+          "download",
+          `minha_lista_${dataAtual}.json`,
+        );
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        showToast("Backup baixado com sucesso!");
+      }
+
+      function triggerImport() {
+        document.getElementById("import-file").click();
+      }
+
+      function importData(event) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const importedData = JSON.parse(e.target.result);
+            if (importedData.categories && importedData.items) {
+              appData = importedData;
+              if (!appData.savedLists) appData.savedLists = {};
+              appData.currentList = "";
+              document.getElementById("budget-input").value =
+                appData.budget > 0
+                  ? appData.budget.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                  : "";
+              resetSearchAndFilters();
+              saveToLocalStorage();
+              renderCategorySelect();
+              renderSavedListsSelect();
+              renderList();
+              updateClearButtonsVisibility();
+              showToast("Backup restaurado com sucesso!");
+            } else {
+              showToast("Arquivo de backup inválido!", "danger");
+            }
+          } catch (err) {
+            showToast("Erro ao processar o arquivo.", "danger");
+          }
+          event.target.value = "";
+        };
+        if (event.target.files[0]) {
+          reader.readAsText(event.target.files[0]);
+        }
+      }
+
+      function calcularDadosRelatorio() {
+        let totalGeral = 0;
+        let totalCarrinho = 0;
+        let categoryCosts = {};
+        appData.categories.forEach((c) => (categoryCosts[c] = 0));
+
+        appData.items.forEach((item) => {
+          const pricing = getItemPricing(item);
+          const usouPromocao = pricing.applied;
+          const itemTotal = pricing.finalTotal;
+          totalGeral += itemTotal;
+          if (item.bought) totalCarrinho += itemTotal;
+          categoryCosts[item.category] =
+            (categoryCosts[item.category] || 0) + itemTotal;
+        });
+
+        const sortedCategories = Object.entries(categoryCosts)
+          .filter(([, value]) => value > 0)
+          .sort((a, b) => b[1] - a[1]);
+
+        return { totalGeral, totalCarrinho, sortedCategories };
+      }
+
+      function generatePDF() {
+        if(typeof html2pdf==='undefined'){ showToast('Gerador PDF indisponível. Abrindo versão para impressão.', 'warning'); window.print(); return; }
+        const boughtItems=appData.items.filter(i=>i.bought);
+        if(!boughtItems.length){showToast('Marque os produtos comprados antes de gerar o PDF.','warning');return;}
+        const pricingFor=(item)=>getItemPricing(item);
+        const normalBought=boughtItems.reduce((s,i)=>s+pricingFor(i).normalTotal,0);
+        const finalBought=boughtItems.reduce((s,i)=>s+pricingFor(i).finalTotal,0);
+        const savings=Math.max(0,normalBought-finalBought);
+        const savingsPct=normalBought>0?(savings/normalBought)*100:0;
+        const totalEstimated=appData.items.reduce((s,i)=>s+pricingFor(i).finalTotal,0);
+        const cartPct=appData.budget>0?(finalBought/appData.budget)*100:0;
+        const categoryCosts={};
+        boughtItems.forEach(i=>{const v=pricingFor(i).finalTotal;categoryCosts[i.category]=(categoryCosts[i.category]||0)+v;});
+        const sortedCats=Object.entries(categoryCosts).sort((a,b)=>b[1]-a[1]);
+        const chartHtml=sortedCats.map(([name,value])=>{const pct=finalBought>0?value/finalBought*100:0;return `<div style="margin:0 0 12px"><div style="display:flex;justify-content:space-between;font-size:11px;color:#222"><b>${name}</b><span>R$ ${value.toFixed(2).replace('.',',')} (${pct.toFixed(1)}%)</span></div><div style="height:6px;background:#e9ecef;border-radius:8px;margin-top:4px"><div style="height:100%;width:${pct}%;background:#2563eb;border-radius:8px"></div></div></div>`}).join('');
+        const rowsHtml=boughtItems.map(item=>{const p=pricingFor(item);const pct=p.normalTotal>0?p.savings/p.normalTotal*100:0;return `<tr><td style="padding:8px;border-bottom:1px solid #ddd;font-size:10px"><b>${item.name}</b>${p.applied?' <span style="color:#b45309">• OFERTA</span>':''}</td><td style="padding:8px;border-bottom:1px solid #ddd;font-size:10px">${item.category}</td><td style="padding:8px;border-bottom:1px solid #ddd;text-align:center;font-size:10px">${item.qty}</td><td style="padding:8px;border-bottom:1px solid #ddd;text-align:right;font-size:10px">R$ ${p.finalTotal.toFixed(2).replace('.',',')}</td><td style="padding:8px;border-bottom:1px solid #ddd;text-align:right;font-size:10px;color:#15803d">${p.savings>0?'R$ '+p.savings.toFixed(2).replace('.',',')+' ('+pct.toFixed(1)+'%)':'—'}</td></tr>`}).join('');
+        const historyEntries=Object.entries(appData.savedLists||{}).sort((a,b)=>{const da=a[1].date?new Date(a[1].date):0,db=b[1].date?new Date(b[1].date):0;return db-da;});
+        const historyRows=historyEntries.length?historyEntries.map(([name,list])=>{const items=list.items||[];const normal=items.reduce((s,i)=>s+pricingFor(i).normalTotal,0);const final=items.reduce((s,i)=>s+pricingFor(i).finalTotal,0);const sv=Math.max(0,normal-final);const pct=normal>0?sv/normal*100:0;return `<tr><td style="padding:7px;border-bottom:1px solid #ddd;font-size:10px"><b>${name}</b></td><td style="padding:7px;border-bottom:1px solid #ddd;font-size:10px">${list.date||'—'}</td><td style="padding:7px;border-bottom:1px solid #ddd;text-align:center;font-size:10px">${items.length}</td><td style="padding:7px;border-bottom:1px solid #ddd;text-align:right;font-size:10px">R$ ${final.toFixed(2).replace('.',',')}</td><td style="padding:7px;border-bottom:1px solid #ddd;text-align:right;font-size:10px;color:#15803d">R$ ${sv.toFixed(2).replace('.',',')} (${pct.toFixed(1)}%)</td></tr>`}).join(''):'<tr><td colspan="5" style="padding:10px;text-align:center;color:#777;font-size:10px">Nenhuma compra salva no histórico.</td></tr>';
+        const profile=appData.profile||{};
+        const pdfArea=document.createElement('div');pdfArea.style.position='absolute';pdfArea.style.left='-99999px';pdfArea.style.top='0';pdfArea.style.width='680px';pdfArea.style.padding='30px';pdfArea.style.background='#fff';pdfArea.style.boxSizing='border-box';pdfArea.style.fontFamily='Arial,Helvetica,sans-serif';
+        pdfArea.innerHTML=`<div style="border-bottom:3px solid #2563eb;padding-bottom:12px;margin-bottom:16px"><div style="display:flex;align-items:center;gap:12px">${profile.avatar?`<img src="${profile.avatar}" style="width:46px;height:46px;border-radius:50%;object-fit:cover">`:''}<div><h1 style="margin:0;font-size:20px;color:#2563eb">RELATÓRIO DE COMPRAS — MINHA LISTA</h1><div style="font-size:10px;color:#666">${profile.name?`Cliente: ${profile.name} • `:''}${new Date().toLocaleString('pt-BR')}</div></div></div></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:18px"><div style="padding:9px;background:#f5f7fa;border:1px solid #ddd"><small>Total pago</small><br><b style="font-size:16px">R$ ${finalBought.toFixed(2).replace('.',',')}</b></div><div style="padding:9px;background:#f5f7fa;border:1px solid #ddd"><small>Sem ofertas</small><br><b>R$ ${normalBought.toFixed(2).replace('.',',')}</b></div><div style="padding:9px;background:#f5f7fa;border:1px solid #ddd"><small>Economia</small><br><b style="color:#15803d">R$ ${savings.toFixed(2).replace('.',',')}</b></div><div style="padding:9px;background:#f5f7fa;border:1px solid #ddd"><small>Economia %</small><br><b style="color:#15803d">${savingsPct.toFixed(1)}%</b></div></div>
+        <p style="font-size:10px;color:#555;margin:0 0 12px">Orçamento: <b>${appData.budget>0?'R$ '+appData.budget.toFixed(2).replace('.',','):'Não definido'}</b> • Uso do orçamento: <b>${appData.budget>0?cartPct.toFixed(1)+'%':'—'}</b> • Total previsto da lista: <b>R$ ${totalEstimated.toFixed(2).replace('.',',')}</b></p>
+        <h3 style="font-size:12px;color:#2563eb;border-bottom:1px solid #2563eb;padding-bottom:5px">PRODUTOS COMPRADOS</h3><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#2563eb;color:#fff"><th style="padding:8px;text-align:left;font-size:10px">Produto</th><th style="padding:8px;text-align:left;font-size:10px">Categoria</th><th style="padding:8px;text-align:center;font-size:10px">Qtd.</th><th style="padding:8px;text-align:right;font-size:10px">Total</th><th style="padding:8px;text-align:right;font-size:10px">Economia</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+        <h3 style="font-size:12px;color:#2563eb;border-bottom:1px solid #2563eb;padding-bottom:5px;margin-top:22px">GASTOS POR CATEGORIA</h3>${chartHtml||'<div style="font-size:10px;color:#777">Sem dados.</div>'}
+        <h3 style="font-size:12px;color:#2563eb;border-bottom:1px solid #2563eb;padding-bottom:5px;margin-top:22px">HISTÓRICO DE COMPRAS SALVAS</h3><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#e9efff"><th style="padding:7px;text-align:left;font-size:10px">Lista</th><th style="padding:7px;text-align:left;font-size:10px">Data</th><th style="padding:7px;text-align:center;font-size:10px">Itens</th><th style="padding:7px;text-align:right;font-size:10px">Total</th><th style="padding:7px;text-align:right;font-size:10px">Economia</th></tr></thead><tbody>${historyRows}</tbody></table>
+        <div style="margin-top:25px;border-top:1px solid #ddd;padding-top:9px;text-align:center;font-size:9px;color:#777">MINHA LISTA • v0.2.0 • Relatório completo da compra</div>`;
+        document.body.appendChild(pdfArea);showToast('Gerando relatório completo...');
+        setTimeout(()=>{html2pdf().from(pdfArea).set({margin:10,filename:`relatorio_minha_lista_${new Date().toISOString().slice(0,10)}.pdf`,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,logging:false,scrollY:0,scrollX:0},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).save().then(()=>pdfArea.remove()).catch(err=>{console.error(err);showToast('Erro ao gerar PDF.','danger');pdfArea.remove();});},250);
+      }
+
+      function copyListText() {
+        const boughtItems = appData.items.filter((i) => i.bought);
+        if (boughtItems.length === 0) {
+          showToast("Nenhum item no carrinho para copiar!", "warning");
+          return;
+        }
+
+        const dataFormatada = new Date().toLocaleDateString("pt-BR");
+        let texto = `LISTA DE COMPRAS - ${dataFormatada}\n\n`;
+        let totalFinal = 0;
+
+        appData.categories.forEach((cat) => {
+          const itensDaCategoria = boughtItems.filter(
+            (i) => i.category === cat,
+          );
+          if (itensDaCategoria.length === 0) return;
+
+          texto += `${cat.toUpperCase()}\n`;
+          itensDaCategoria.forEach((item) => {
+            const pricing = getItemPricing(item);
+            const usouPromocao = pricing.applied;
+            const itemTotal = pricing.finalTotal;
+            totalFinal += itemTotal;
+            texto += `- ${item.name} (Qtd: ${item.qty}) - R$ ${itemTotal.toFixed(2)}\n`;
+          });
+          texto += `\n`;
+        });
+
+        texto += `------------------------\n`;
+        texto += `TOTAL ADQUIRIDO: R$ ${totalFinal.toFixed(2)}`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(texto)
+            .then(() =>
+              showToast("Texto copiado para a área de transferência!"),
+            )
+            .catch(() => copyTextFallback(texto));
+        } else {
+          copyTextFallback(texto);
+        }
+      }
+
+      function copyTextFallback(texto) {
+        const textarea = document.createElement("textarea");
+        textarea.value = texto;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand("copy");
+          showToast("Texto copiado para a área de transferência!");
+        } catch (err) {
+          showToast("Não foi possível copiar o texto.", "danger");
+        }
+        textarea.remove();
+      }
+
+      function openProfile(){
+        const p=appData.profile||{name:"",avatar:"",cover:""};
+        document.getElementById('profile-name').value=p.name||'';
+        checkClear(document.getElementById('profile-name'));
+        renderProfile();
+        document.getElementById('profile-modal').classList.add('show');
+      }
+      function closeProfile(){document.getElementById('profile-modal').classList.remove('show');}
+      function renderProfile(){
+        const p=appData.profile||{};
+        const name=document.getElementById('profile-name-preview');
+        const avatar=document.getElementById('profile-avatar-preview');
+        const cover=document.getElementById('profile-cover-preview');
+        const input=document.getElementById('profile-name');
+        if(input && document.activeElement===input) p.name=input.value.trim();
+        if(name) name.textContent=p.name||'Seu nome';
+        const pcs=document.getElementById('profile-cloud-status'); if(pcs) pcs.textContent=firebaseUser?'☁️ Perfil conectado e sincronizado com Google.':'🔐 Conecte o Google para sincronizar seu perfil.';
+        if(avatar) avatar.src=p.avatar||'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="100%" height="100%" fill="#e5e7eb"/><text x="50%" y="55%" text-anchor="middle" font-size="42">👤</text></svg>');
+        if(cover) cover.src=p.cover||'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="180"><defs><linearGradient id="g"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/></svg>');
+      }
+      function loadProfileImage(event,type){
+        const file=event.target.files&&event.target.files[0]; if(!file)return;
+        if(file.size>3*1024*1024){showToast('Use uma imagem de até 3 MB.','warning');event.target.value='';return;}
+        const reader=new FileReader();
+        reader.onload=async()=>{appData.profile=appData.profile||{};appData.profile[type]=reader.result;renderProfile();saveToLocalStorage();if(firebaseUser&&window.firebaseStorage){try{const path=`users/${firebaseUser.uid}/profile/${type}`;const storageRef=ref(window.firebaseStorage,path);await uploadString(storageRef,reader.result,'data_url');const url=await getDownloadURL(storageRef);appData.profile[type]=url;saveToLocalStorage();showToast(type==='avatar'?'Foto de perfil sincronizada.':'Capa sincronizada.');}catch(err){console.warn('Storage:',err);showToast('Imagem salva localmente; sincronização da foto falhou.','warning');}}};
+        reader.readAsDataURL(file);
+      }
+      function saveProfile(){
+        const input=document.getElementById('profile-name');
+        appData.profile=appData.profile||{};appData.profile.name=input.value.trim();
+        saveToLocalStorage();renderProfile();closeProfile();showToast('Perfil salvo com sucesso!');
+      }
+
+      function openTutorial() {
+        const tutorialHtml = `
+          <div style="max-height: 430px; overflow-y: auto; padding-right: 5px; text-align: left;">
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">1. 💰 Orçamento em tempo real</h4><p style="font-size:.85rem;line-height:1.5">Defina seu limite no topo. O sistema mostra quanto você já colocou no carrinho, o total previsto e quanto ainda pode gastar.</p></div>
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">2. 🛒 Cadastro rápido</h4><p style="font-size:.85rem;line-height:1.5">Digite produto, preço e quantidade. Use <strong>Adicionar produto</strong> para continuar rapidamente. O botão <strong>Limpar campos</strong> apaga o formulário inteiro.</p></div>
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">3. ✕ Limpar campos</h4><p style="font-size:.85rem;line-height:1.5">Todo campo digitável possui um <strong>✕</strong>. Ele aparece somente quando existe conteúdo e desaparece quando o campo fica vazio.</p></div>
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">4. 🏷️ Ofertas inteligentes</h4><p style="font-size:.85rem;line-height:1.5">Cadastre a quantidade mínima e o preço promocional. Quando a quantidade atingir a regra, o sistema compara automaticamente o preço normal com o preço da oferta e mostra <strong>quanto você economiza</strong>. Você ainda pode escolher se deseja aplicar a oferta.</p><div class="example-box"><strong>Exemplo:</strong> 3 unidades a R$ 10,00 normalmente = R$ 30,00. Na oferta, 3 × R$ 8,00 = R$ 24,00. Economia: <strong>R$ 6,00</strong>.</div></div>
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">5. 🔎 Busca e filtros</h4><p style="font-size:.85rem;line-height:1.5">Busque produtos e use <strong>Todos, Pendentes ou Peguei</strong> sem alterar os cálculos.</p></div>
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">6. 🛍️ Modo Compra</h4><p style="font-size:.85rem;line-height:1.5">Use o modo compra durante o supermercado para reduzir distrações e focar nos produtos que ainda precisa pegar.</p></div>
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">7. 📋 WhatsApp e 📄 PDF</h4><p style="font-size:.85rem;line-height:1.5">Ao finalizar, você pode copiar o resumo para o WhatsApp ou gerar um relatório em PDF.</p></div>
+            <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">8. 👤 Perfil</h4><p style="font-size:.85rem;line-height:1.5">O botão <strong>👤 Perfil</strong>, no topo ao lado do tema e do tutorial, abre o perfil em tela cheia para salvar nome, foto de perfil e foto de capa.</p></div><div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">9. 🔐 Conta Google</h4><p style="font-size:.85rem;line-height:1.5">Conecte sua conta Google para sincronizar listas, produtos, histórico e perfil entre aparelhos. O sistema mantém uma cópia local para uso offline.</p></div><div class="tut-step" style="margin-bottom:6px"><h4 style="color:var(--primary-color);margin-bottom:5px">10. ⚙️ Configurações</h4><p style="font-size:.85rem;line-height:1.5">As ferramentas ficam no botão fixo inferior. Lá estão listas salvas, relatórios, backup, restauração e categorias.</p></div>
+            <div style="margin-top:14px;padding:10px;border-radius:12px;background:color-mix(in srgb,var(--primary-color) 7%,var(--bg-card));font-size:11px"><strong>Novidades da v0.2.1:</strong> perfil em tela cheia, fotos maiores, conexão com conta Google, sincronização em nuvem e preparação para histórico inteligente de compras.</div>
+          </div>`;
+        openCustomModal("📖 Como Usar o MINHA LISTA • v0.2.1", tutorialHtml, [{ text: "Entendido! ✅", className: "btn-primary btn-sm" }]);
+      }
+    
+      document.addEventListener('change',e=>{if(e.target.id==='prod-category-normal'){document.getElementById('prod-category').value=e.target.value}});
+      // v0.2.0: atualização instantânea da simulação de ofertas
+      ['prod-qty','prod-price','prod-promo-qty','prod-promo-price'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el){el.addEventListener('input',updatePromoPreview);el.addEventListener('change',updatePromoPreview);}
       });
-    });
 
-    renderAccount();
-  } catch (e) {
-    console.error('Firebase initialization', e);
-    cloud.enabled = false;
-    const msg = firebaseErrorMessage(e);
-    setAccountFeedback(msg, 'danger');
-    renderAccount();
-  }
-}
-async function login() {
-  if (!cloud.enabled || !cloud.auth) {
-    toast('A conexão com o Firebase ainda não está pronta.', 'danger');
-    setAccountFeedback('O Firebase ainda está inicializando. Tente novamente em alguns segundos.', 'danger');
-    return;
-  }
-  if (cloud.loginPending) return;
+      // ==================== v0.2.0 — CONTA GOOGLE + NUVEM ====================
+      let firebaseUser = null;
+      let cloudSyncTimer = null;
+      let cloudBusy = false;
 
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
-  cloud.loginPending = true;
-  sessionStorage.setItem('minha_lista_login_pending', '1');
-  setAccountFeedback('Abrindo o Google para escolher sua conta...', 'info');
-  renderAccount();
-
-  try {
-    await cloud.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-    // O POPUP APENAS INICIA O LOGIN. O onAuthStateChanged CONFIRMA A SESSAO.
-    await cloud.auth.signInWithPopup(provider);
-    // NAO CHAMAR handleAuthUser AQUI. ISSO EVITA DUPLO PROCESSAMENTO E IMPEDE QUE UM ERRO DE FIRESTORE PARECA ERRO DE LOGIN.
-  } catch (e) {
-    console.error('Google login', e);
-
-    // Em celulares, alguns navegadores bloqueiam popup. Nesse caso, tenta redirect.
-    if (e?.code === 'auth/popup-blocked' || e?.code === 'auth/cancelled-popup-request') {
-      try {
-        setAccountFeedback('O navegador bloqueou a janela. Redirecionando para o Google...', 'info');
-        await cloud.auth.signInWithRedirect(provider);
-        return;
-      } catch (redirectError) {
-        e = redirectError;
+      function firebaseConfigured(){
+        return !!window.firebaseReady && !!window.firebaseAuth && !!window.firebaseDb;
       }
-    }
 
-    cloud.loginPending = false;
-    sessionStorage.removeItem('minha_lista_login_pending');
-    const msg = firebaseErrorMessage(e);
-    setAccountFeedback(msg, 'danger');
-    toast(msg, 'danger');
-    renderAccount();
-  }
-}
-async function logout(){try{await cloud.auth.signOut();cloud.user=null;cloud.lastSync=null;setAccountFeedback('Conta desconectada. Seus dados locais continuam neste aparelho.','warn');toast('Conta desconectada.','warn');renderBackup();renderAccount()}catch(e){toast('Não foi possível desconectar a conta.','danger')}}
-function openTutorial(){const m=$('tutorialModal');m.classList.add('open');const sc=$('tutorialScroll');const bar=$('tutorialProgressBar');const steps=[...sc.querySelectorAll('.tutorialStep')];const update=()=>{const max=sc.scrollHeight-sc.clientHeight;bar.style.width=(max>0?Math.min(100,(sc.scrollTop/max)*100):100)+'%'};sc.onscroll=update;steps.forEach(step=>step.classList.remove('visible'));if('IntersectionObserver' in window){if(sc._tutorialObserver)sc._tutorialObserver.disconnect();sc._tutorialObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')}),{root:sc,threshold:.22}) ;steps.forEach(step=>sc._tutorialObserver.observe(step))}else{steps.forEach(step=>step.classList.add('visible'))}update()}
-function closeTutorial(){$('tutorialModal').classList.remove('open')}
-let deferredInstallPrompt=null;
-function isStandalone(){return window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone===true;}
-function setInstallUI(){
-  const btn=$('installBtn'), card=$('installCard'), action=$('installActionBtn'), hint=$('installHint');
-  if(isStandalone()){if(btn)btn.style.display='none';if(card)card.style.display='none';return}
-  if(btn)btn.style.display='';
-  if(card){card.style.display='';
-    if(deferredInstallPrompt){if(action){action.disabled=false;action.textContent='Instalar agora'}if(hint)hint.textContent='Instale o Minha Lista no aparelho e use como um aplicativo.';}
-    else{if(action){action.disabled=false;action.textContent='Como instalar'}if(hint)hint.textContent='Se o navegador ainda não liberar a instalação automática, use o menu do navegador e escolha "Instalar aplicativo" ou "Adicionar à tela inicial".';}
-  }
-}
-async function installApp(){
-  if(isStandalone()){toast('O Minha Lista já está instalado neste aparelho.','info');return}
-  if(deferredInstallPrompt){
-    const promptEvent=deferredInstallPrompt; deferredInstallPrompt=null;
-    try{promptEvent.prompt();const result=await promptEvent.userChoice;if(result?.outcome==='accepted')toast('Instalação iniciada. Aguarde o navegador concluir.','ok');else toast('Instalação adiada. Você pode instalar depois pelo botão ou menu do navegador.','info');}
-    catch(e){console.warn('Install prompt',e);toast('Não foi possível abrir a instalação automática. Use o menu do navegador para instalar.','warn')}
-    setInstallUI(); return;
-  }
-  toast('O navegador ainda não liberou a instalação automática. Use o menu do navegador → Instalar aplicativo / Adicionar à tela inicial.','info');
-}
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;setInstallUI();});
-window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;toast('Minha Lista instalado com sucesso! 📲','ok');setInstallUI();});
-async function checkForUpdate(){
-  try{const r=await fetch('./version.json?ts='+Date.now(),{cache:'no-store',headers:{'Cache-Control':'no-cache'}});
-    if(!r.ok)return;const v=await r.json();
-    if(v.version&&v.version!==APP_VERSION&&localStorage.getItem('minha_lista_update_later')!==v.version){
-      $('oldVersion').textContent=APP_VERSION;$('newVersion').textContent=v.version;$('updateNotes').textContent=v.notes||'Melhorias de estabilidade e segurança.';
-      $('updateModal').classList.add('open');window.pendingVersion=v.version;
-    }
-  }catch(e){console.warn('Version check',e)}
-}
-function laterUpdate(){if(window.pendingVersion)localStorage.setItem('minha_lista_update_later',window.pendingVersion);$('updateModal').classList.remove('open');toast('Atualização adiada. Você continuará usando a versão atual.','info')}
-async function waitForWaitingWorker(reg,timeout=12000){
-  if(reg?.waiting)return reg.waiting;
-  return await new Promise(resolve=>{
-    let done=false;const finish=w=>{if(done)return;done=true;clearTimeout(timer);resolve(w||null)};const timer=setTimeout(()=>finish(null),timeout);
-    const watch=()=>{if(reg.waiting){finish(reg.waiting);return}if(reg.installing){const installing=reg.installing;installing.addEventListener('statechange',()=>{if(installing.state==='installed'&&reg.waiting)finish(reg.waiting)})}};
-    watch();
-  });
-}
-async function applyUpdate(){
-  const target=window.pendingVersion;$('updateModal').classList.remove('open');localStorage.removeItem('minha_lista_update_later');
-  if(!('serviceWorker' in navigator)){toast('Seu navegador não suporta atualização automática. Recarregando...','warn');setTimeout(()=>location.reload(),700);return}
-  try{const reg=await navigator.serviceWorker.getRegistration();
-    if(!reg){toast('Atualização disponível. Recarregando para obter a nova versão...','info');setTimeout(()=>location.reload(),700);return}
-    window.__updating=true;toast('⏳ Preparando a atualização '+(target||'')+'...','info');await reg.update();
-    const worker=await waitForWaitingWorker(reg,12000);
-    if(worker){worker.postMessage({type:'SKIP_WAITING'});toast('🚀 Atualização pronta. Aplicando agora...','ok');return}
-    window.__updating=false;toast('A nova versão ainda está sendo preparada. Tente atualizar novamente em alguns segundos.','warn');
-  }catch(e){window.__updating=false;console.warn('Apply update',e);toast('Não foi possível aplicar a atualização automaticamente. Tente novamente.','danger')}
-}
-async function registerSW(){
-  if(!('serviceWorker' in navigator))return;
-  try{const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
-    navigator.serviceWorker.addEventListener('controllerchange',()=>{if(window.__updating){window.__updating=false;location.reload()}});
-    await reg.update();if(reg.waiting)console.info('Nova versão do Service Worker aguardando confirmação.');
-  }catch(e){console.warn('SW',e)}
-}
-$('budget').addEventListener('input',e=>{data.budget=parseMoney(e.target.value);persist();renderList()});$('search').addEventListener('input',renderList);$('historySearch').addEventListener('input',renderHistory);$('catalogSearch').addEventListener('input',renderCatalog);document.addEventListener('click',e=>{if(!e.target.closest('.field'))$('suggestions').hidden=true});
-window.addEventListener('load',async()=>{$('footerVersion').textContent='v'+APP_VERSION;load();const t=localStorage.getItem('minha_lista_theme');if(t){document.body.dataset.theme=t;$('themeBtn').textContent=t==='dark'?'🌙':'☀️'}renderAll();setInstallUI();await setupFirebase();await registerSW();setTimeout(checkForUpdate,1800);setTimeout(checkForUpdate,7000)});
-
-$('budget').addEventListener('input',e=>{data.budget=parseMoney(e.target.value);persist();renderList()});$('search').addEventListener('input',renderList);$('historySearch').addEventListener('input',renderHistory);$('catalogSearch').addEventListener('input',renderCatalog);document.addEventListener('click',e=>{if(!e.target.closest('.field'))$('suggestions').hidden=true});
-</script>
-<script id="v314-input-enhancements">(function(){const MONEY=new Set(['prodPrice','prodPromo','budget']);function addClear(i){if(i.dataset.clearWrapped||i.type==='hidden'||i.disabled||i.readOnly)return;if(!['text','search','email','tel','url','number'].includes(i.type))return;const w=document.createElement('span');w.className='inputClearWrap';i.parentNode.insertBefore(w,i);w.appendChild(i);const b=document.createElement('button');b.type='button';b.className='inputClearBtn';b.textContent='×';b.setAttribute('aria-label','Limpar campo');b.onclick=()=>{i.value='';i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));i.focus()};w.appendChild(b);i.dataset.clearWrapped='1'}function addMoney(i){if(!MONEY.has(i.id)||i.dataset.moneyReady)return;i.dataset.moneyReady='1';i.type='text';i.inputMode='numeric';i.setAttribute('pattern','[0-9]*');i.classList.add('moneyInput');i.addEventListener('input',function(){let raw=this.value.replace(/\D/g,'');if(!raw){this.value='';return}raw=raw.replace(/^0+(?=\d)/,'');if(raw.length===1)raw='0'+raw;this.value=(raw.slice(0,-2)||'0')+','+raw.slice(-2)})}function scan(){document.querySelectorAll('input').forEach(i=>{addClear(i);addMoney(i)})}window.addEventListener('DOMContentLoaded',()=>{scan();new MutationObserver(scan).observe(document.body,{childList:true,subtree:true})})})();</script>
-<script>
-// DIAGNOSTICO TEMPORARIO DO LOGIN GOOGLE - v3.1.10
-(function(){
-  function showGoogleDiagnostic(error, source){
-    try {
-      const code = error && error.code ? error.code : 'SEM_CODIGO';
-      const message = error && error.message ? error.message : String(error || 'Erro desconhecido');
-      const details = [
-        'ORIGEM: ' + (source || 'desconhecida'),
-        'CODIGO: ' + code,
-        'MENSAGEM: ' + message,
-        'DOMINIO: ' + location.origin,
-        'HOST: ' + location.host,
-        'URL: ' + location.href
-      ].join('\\n');
-      console.error('[MINHA LISTA] ERRO GOOGLE', {code, message, source, error});
-      let box=document.getElementById('googleDiagnosticBox');
-      if(!box){
-        box=document.createElement('div');
-        box.id='googleDiagnosticBox';
-        box.style.cssText='position:fixed;z-index:999999;left:12px;right:12px;bottom:12px;background:#fff;border:2px solid #dc2626;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);font:14px/1.45 system-ui,sans-serif;color:#111;max-height:70vh;overflow:auto;white-space:pre-wrap;';
-        document.body.appendChild(box);
+      function safeCloudData(){
+        const copy = JSON.parse(JSON.stringify(appData));
+        // Fotos em base64 ficam fora do Firestore; depois do login elas são enviadas ao Storage.
+        if(copy.profile){
+          if(String(copy.profile.avatar||'').startsWith('data:')) copy.profile.avatar='';
+          if(String(copy.profile.cover||'').startsWith('data:')) copy.profile.cover='';
+        }
+        copy._schema = 1;
+        copy._updatedAtClient = new Date().toISOString();
+        return copy;
       }
-      box.innerHTML='<strong style="color:#b91c1c">ERRO REAL DO LOGIN GOOGLE</strong><br><br>'+details.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\\n/g,'<br>')+'<br><br><button id="copyGoogleDiagnostic" style="padding:10px 14px;border:0;border-radius:10px;background:#111;color:#fff">Copiar diagnóstico</button>';
-      const btn=document.getElementById('copyGoogleDiagnostic');
-      if(btn) btn.onclick=()=>navigator.clipboard?.writeText(details).then(()=>btn.textContent='Copiado!');
-    } catch(e){ console.error('Falha ao exibir diagnóstico',e); }
-  }
-  window.__showGoogleDiagnostic=showGoogleDiagnostic;
-})();
+
+      function mergeLocalAndCloud(local, cloud){
+        if(!cloud) return local;
+        const merged = JSON.parse(JSON.stringify(cloud));
+        merged.categories = Array.from(new Set([...(cloud.categories||[]), ...(local.categories||[])]));
+        const map = new Map();
+        [...(cloud.items||[]), ...(local.items||[])].forEach(item=>{
+          const key = String(item.id ?? (item.name||'').trim().toLowerCase());
+          if(!map.has(key) || new Date(item.updatedAt||0) > new Date(map.get(key).updatedAt||0)) map.set(key,item);
+        });
+        merged.items = Array.from(map.values());
+        merged.savedLists = {...(cloud.savedLists||{}), ...(local.savedLists||{})};
+        merged.budget = local.budget || cloud.budget || 0;
+        merged.currentList = local.currentList || cloud.currentList || '';
+        merged.profile = {...(cloud.profile||{}), ...(local.profile||{})};
+        return merged;
+      }
+
+      async function syncToCloudNow(){
+        if(!firebaseUser || !window.firebaseDb || cloudBusy) return;
+        cloudBusy=true;
+        try{
+          await setDoc(doc(window.firebaseDb,'users',firebaseUser.uid), safeCloudData(), {merge:true});
+          updateGoogleUI('synced');
+        }catch(err){
+          console.error(err);
+          showToast('Não foi possível sincronizar agora.','warning');
+          updateGoogleUI('error');
+        }finally{cloudBusy=false;}
+      }
+
+      function scheduleCloudSync(){
+        if(!firebaseUser) return;
+        clearTimeout(cloudSyncTimer);
+        cloudSyncTimer=setTimeout(syncToCloudNow,900);
+      }
+
+      async function loadCloudData(user){
+        if(!window.firebaseDb) return;
+        try{
+          const snap=await getDoc(doc(window.firebaseDb,'users',user.uid));
+          const cloud=snap.exists()?snap.data():null;
+          if(cloud){
+            appData=mergeLocalAndCloud(appData,cloud);
+            saveToLocalStorage(false);
+            renderCategorySelect(); syncCategorySelects(); renderSavedListsSelect(); renderList(); renderProfile();
+            showToast('Dados da conta Google carregados.');
+          }else{
+            await syncToCloudNow();
+            showToast('Dados deste aparelho foram enviados para a nuvem.');
+          }
+          updateGoogleUI('synced');
+        }catch(err){console.error(err);showToast('Erro ao carregar os dados da nuvem.','danger');}
+      }
+
+      window.handleFirebaseUser = async function(user){
+        firebaseUser=user||null;
+        if(user){
+          updateGoogleUI('loading',user);
+          await loadCloudData(user);
+        }else updateGoogleUI('offline');
+      };
+
+      async function toggleGoogleAccount(){
+        if(!firebaseConfigured()){
+          openCustomModal('🔐 Conectar conta Google',`<div style="line-height:1.55;font-size:13px"><p>O Firebase ainda não foi configurado neste arquivo.</p><p style="margin-top:8px">Cole o <strong>firebaseConfig</strong> da sua Web App na área indicada do código e publique/abra novamente.</p><div class="example-box" style="margin-top:10px"><b>Precisamos:</b><br>apiKey, authDomain, projectId, storageBucket, messagingSenderId e appId.</div></div>`,[{text:'Entendido',className:'btn btn-primary btn-sm'}]);
+          return;
+        }
+        try{
+          if(firebaseUser){
+            await signOut(window.firebaseAuth);
+            showToast('Conta Google desconectada.');
+          }else{
+            // Redirecionamento é mais adequado para dispositivos móveis.
+            await signInWithRedirect(window.firebaseAuth, window.googleProvider);
+          }
+        }catch(err){console.error(err);showToast('Não foi possível conectar a conta Google.','danger');}
+      }
+
+      async function forceCloudSync(){
+        if(!firebaseUser){showToast('Conecte sua conta Google primeiro.','warning');return;}
+        await syncToCloudNow();
+        showToast('Sincronização concluída.');
+      }
+
+      function updateGoogleUI(state,user){
+        const btn=document.getElementById('google-connect-btn');
+        const utility=document.getElementById('google-utility-btn');
+        const title=document.getElementById('google-status-title');
+        const sub=document.getElementById('google-status-sub');
+        const badge=document.getElementById('google-sync-badge');
+        const avatar=document.querySelector('.google-avatar');
+        if(!btn) return;
+        if(state==='loading' && user){
+          btn.innerHTML='⏳ <span>Conectando...</span>'; utility&&(utility.innerHTML='⏳ Conectando...'); title&&(title.textContent='Conectando...'); sub&&(sub.textContent=user.email||'Conta Google'); return;
+        }
+        if(firebaseUser){
+          const name=firebaseUser.displayName||firebaseUser.email||'Conta Google';
+          btn.innerHTML='☁️ <span>Google conectado</span>'; utility&&(utility.innerHTML='☁️ Desconectar Google');
+          title&&(title.textContent=name); sub&&(sub.textContent=firebaseUser.email||'Dados sincronizados com sua conta');
+          badge&&(badge.style.display='inline-block');
+          if(avatar && firebaseUser.photoURL){avatar.src=firebaseUser.photoURL;avatar.alt=name;}
+        }else{
+          btn.innerHTML='🔐 <span>Google</span>'; utility&&(utility.innerHTML='🔐 Conectar Google');
+          title&&(title.textContent='Não conectado'); sub&&(sub.textContent='Seus dados ainda estão somente neste aparelho'); badge&&(badge.style.display='none');
+        }
+      }
+
+      // Atualiza a função de persistência local para também sincronizar quando houver conta.
+      const _saveToLocalStorageOriginal = saveToLocalStorage;
+      saveToLocalStorage = function(schedule=true){
+        _saveToLocalStorageOriginal();
+        if(schedule) scheduleCloudSync();
+      };
+
+
+      // Observador corrigido: fica dentro do script para nunca aparecer no rodapé.
+      let clearObserverTimer;
+      const clearObserver = new MutationObserver(() => {
+        clearTimeout(clearObserverTimer);
+        clearObserverTimer = setTimeout(() => ensureClearButtons(), 0);
+      });
+      clearObserver.observe(document.body, {childList:true, subtree:true});
+      setTimeout(() => ensureClearButtons(), 0);
+
 </script>
-</body></html>
+</body>
+</html>
+
