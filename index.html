@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MINHA LISTA 🛒 • v0.2.1</title>
+    <title>MINHA LISTA 🛒 • v0.2.2</title>
     <style>
 :root{--bg-primary:#f4f7fb;--bg-card:#fff;--text-main:#172033;--text-muted:#687386;--border-color:#e3e8ef;--primary-color:#2563eb;--primary-hover:#1d4ed8;--success-color:#16a34a;--warning-color:#d97706;--danger-color:#dc2626;--card-shadow:0 8px 28px rgba(23,32,51,.07);--radius:18px}
 [data-theme="dark"]{--bg-primary:#0b1120;--bg-card:#121a2a;--text-main:#edf2f7;--text-muted:#9aa7ba;--border-color:#263246;--card-shadow:0 8px 28px rgba(0,0,0,.22)}
@@ -174,7 +174,7 @@ body{min-width:0}
     </div>
 
     <div id="list-container" class="category-section"></div>
-    <footer><span>Koda Sistemas</span> • <strong>MINHA LISTA v0.2.1</strong> • Dados locais + sincronização Google</footer>
+    <footer><span>Koda Sistemas</span> • <strong>MINHA LISTA v0.2.2</strong> • Dados locais + sincronização Google</footer>
   </div>
 
   <div class="settings-fixed no-print">
@@ -223,7 +223,7 @@ body{min-width:0}
   <div id="category-chart-box" style="display:none"><div id="category-bars"></div></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 import { getStorage, ref, uploadString, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
 
@@ -246,9 +246,22 @@ try {
     window.firebaseDb=getFirestore(fbApp);
     window.firebaseStorage=getStorage(fbApp);
     window.firebaseStorageRef=ref; window.firebaseUploadString=uploadString; window.firebaseGetDownloadURL=getDownloadURL;
+    // v0.2.2: o app roda em <script> clássico (escopo global separado deste módulo).
+    // As funções importadas acima só existem aqui dentro; sem isso, chamá-las no
+    // script clássico dá "signInWithPopup is not defined" — era a causa real do bug.
+    window.signInWithPopup=signInWithPopup;
+    window.signInWithRedirect=signInWithRedirect;
+    window.signOut=signOut;
+    window.doc=doc; window.getDoc=getDoc; window.setDoc=setDoc; window.serverTimestamp=serverTimestamp;
+    window.ref=ref; window.uploadString=uploadString; window.getDownloadURL=getDownloadURL;
     window.googleProvider=new GoogleAuthProvider();
     window.firebaseReady=true;
     onAuthStateChanged(window.firebaseAuth, user=>window.handleFirebaseUser?.(user));
+    // Resultado de login por redirect (fallback mobile) chega aqui, não no try/catch do botão.
+    getRedirectResult(window.firebaseAuth).catch(err=>{
+      console.error('Google Auth (redirect):', err);
+      window.showGoogleAuthError?.(err);
+    });
   }
 } catch(err){ console.error("Firebase init:",err); }
 </script>
@@ -1180,7 +1193,7 @@ try {
         <h3 style="font-size:12px;color:#2563eb;border-bottom:1px solid #2563eb;padding-bottom:5px">PRODUTOS COMPRADOS</h3><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#2563eb;color:#fff"><th style="padding:8px;text-align:left;font-size:10px">Produto</th><th style="padding:8px;text-align:left;font-size:10px">Categoria</th><th style="padding:8px;text-align:center;font-size:10px">Qtd.</th><th style="padding:8px;text-align:right;font-size:10px">Total</th><th style="padding:8px;text-align:right;font-size:10px">Economia</th></tr></thead><tbody>${rowsHtml}</tbody></table>
         <h3 style="font-size:12px;color:#2563eb;border-bottom:1px solid #2563eb;padding-bottom:5px;margin-top:22px">GASTOS POR CATEGORIA</h3>${chartHtml||'<div style="font-size:10px;color:#777">Sem dados.</div>'}
         <h3 style="font-size:12px;color:#2563eb;border-bottom:1px solid #2563eb;padding-bottom:5px;margin-top:22px">HISTÓRICO DE COMPRAS SALVAS</h3><table style="width:100%;border-collapse:collapse"><thead><tr style="background:#e9efff"><th style="padding:7px;text-align:left;font-size:10px">Lista</th><th style="padding:7px;text-align:left;font-size:10px">Data</th><th style="padding:7px;text-align:center;font-size:10px">Itens</th><th style="padding:7px;text-align:right;font-size:10px">Total</th><th style="padding:7px;text-align:right;font-size:10px">Economia</th></tr></thead><tbody>${historyRows}</tbody></table>
-        <div style="margin-top:25px;border-top:1px solid #ddd;padding-top:9px;text-align:center;font-size:9px;color:#777">MINHA LISTA • v0.2.0 • Relatório completo da compra</div>`;
+        <div style="margin-top:25px;border-top:1px solid #ddd;padding-top:9px;text-align:center;font-size:9px;color:#777">MINHA LISTA • v0.2.2 • Relatório completo da compra</div>`;
         document.body.appendChild(pdfArea);showToast('Gerando relatório completo...');
         setTimeout(()=>{html2pdf().from(pdfArea).set({margin:10,filename:`relatorio_minha_lista_${new Date().toISOString().slice(0,10)}.pdf`,image:{type:'jpeg',quality:.98},html2canvas:{scale:2,useCORS:true,logging:false,scrollY:0,scrollX:0},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).save().then(()=>pdfArea.remove()).catch(err=>{console.error(err);showToast('Erro ao gerar PDF.','danger');pdfArea.remove();});},250);
       }
@@ -1288,9 +1301,9 @@ try {
             <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">6. 🛍️ Modo Compra</h4><p style="font-size:.85rem;line-height:1.5">Use o modo compra durante o supermercado para reduzir distrações e focar nos produtos que ainda precisa pegar.</p></div>
             <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">7. 📋 WhatsApp e 📄 PDF</h4><p style="font-size:.85rem;line-height:1.5">Ao finalizar, você pode copiar o resumo para o WhatsApp ou gerar um relatório em PDF.</p></div>
             <div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">8. 👤 Perfil</h4><p style="font-size:.85rem;line-height:1.5">O botão <strong>👤 Perfil</strong>, no topo ao lado do tema e do tutorial, abre o perfil em tela cheia para salvar nome, foto de perfil e foto de capa.</p></div><div class="tut-step" style="margin-bottom:16px"><h4 style="color:var(--primary-color);margin-bottom:5px">9. 🔐 Conta Google</h4><p style="font-size:.85rem;line-height:1.5">Conecte sua conta Google para sincronizar listas, produtos, histórico e perfil entre aparelhos. O sistema mantém uma cópia local para uso offline.</p></div><div class="tut-step" style="margin-bottom:6px"><h4 style="color:var(--primary-color);margin-bottom:5px">10. ⚙️ Configurações</h4><p style="font-size:.85rem;line-height:1.5">As ferramentas ficam no botão fixo inferior. Lá estão listas salvas, relatórios, backup, restauração e categorias.</p></div>
-            <div style="margin-top:14px;padding:10px;border-radius:12px;background:color-mix(in srgb,var(--primary-color) 7%,var(--bg-card));font-size:11px"><strong>Novidades da v0.2.1:</strong> perfil em tela cheia, fotos maiores, conexão com conta Google, sincronização em nuvem e preparação para histórico inteligente de compras.</div>
+            <div style="margin-top:14px;padding:10px;border-radius:12px;background:color-mix(in srgb,var(--primary-color) 7%,var(--bg-card));font-size:11px"><strong>Novidades da v0.2.2:</strong> correção do login com Google (o botão travava com "signInWithPopup is not defined"), fallback automático para redirecionamento quando o popup é bloqueado, e mensagem de erro real do Firebase quando algo falhar.</div>
           </div>`;
-        openCustomModal("📖 Como Usar o MINHA LISTA • v0.2.1", tutorialHtml, [{ text: "Entendido! ✅", className: "btn-primary btn-sm" }]);
+        openCustomModal("📖 Como Usar o MINHA LISTA • v0.2.2", tutorialHtml, [{ text: "Entendido! ✅", className: "btn-primary btn-sm" }]);
       }
     
       document.addEventListener('change',e=>{if(e.target.id==='prod-category-normal'){document.getElementById('prod-category').value=e.target.value}});
@@ -1383,6 +1396,14 @@ try {
         }else updateGoogleUI('offline');
       };
 
+      function showGoogleAuthError(err){
+        console.error('Google Auth:', err);
+        const code = err?.code || 'erro-desconhecido';
+        const message = err?.message || String(err);
+        openCustomModal('🔴 Erro ao conectar Google', `<div style=\"line-height:1.5;font-size:13px\"><p><b>Código:</b> ${escapeHtml(code)}</p><p style=\"margin-top:8px\"><b>Mensagem:</b> ${escapeHtml(message)}</p></div>`, [{text:'Fechar',className:'btn btn-primary btn-sm'}]);
+      }
+      window.showGoogleAuthError = showGoogleAuthError;
+
       async function toggleGoogleAccount(){
         if(!firebaseConfigured()){
           openCustomModal('🔐 Conectar conta Google',`<div style="line-height:1.55;font-size:13px"><p>O Firebase ainda não foi configurado neste arquivo.</p><p style="margin-top:8px">Cole o <strong>firebaseConfig</strong> da sua Web App na área indicada do código e publique/abra novamente.</p><div class="example-box" style="margin-top:10px"><b>Precisamos:</b><br>apiKey, authDomain, projectId, storageBucket, messagingSenderId e appId.</div></div>`,[{text:'Entendido',className:'btn btn-primary btn-sm'}]);
@@ -1393,13 +1414,23 @@ try {
             await signOut(window.firebaseAuth);
             showToast('Conta Google desconectada.');
           }else{
-            await signInWithPopup(window.firebaseAuth, window.googleProvider);
+            try{
+              await signInWithPopup(window.firebaseAuth, window.googleProvider);
+            }catch(popupErr){
+              const code = popupErr?.code || '';
+              if(code==='auth/popup-closed-by-user' || code==='auth/cancelled-popup-request'){
+                return; // usuário fechou o popup de propósito
+              }
+              if(code==='auth/popup-blocked' || code==='auth/operation-not-supported-in-this-environment'){
+                // Popup bloqueado/indisponível (comum em PWA instalado e em alguns Chrome mobile): usa redirect.
+                await signInWithRedirect(window.firebaseAuth, window.googleProvider);
+                return;
+              }
+              throw popupErr;
+            }
           }
         }catch(err){
-          console.error('Google Auth:', err);
-          const code = err?.code || 'erro-desconhecido';
-          const message = err?.message || String(err);
-          openCustomModal('🔴 Erro ao conectar Google', `<div style=\"line-height:1.5;font-size:13px\"><p><b>Código:</b> ${escapeHtml(code)}</p><p style=\"margin-top:8px\"><b>Mensagem:</b> ${escapeHtml(message)}</p></div>`, [{text:'Fechar',className:'btn btn-primary btn-sm'}]);
+          showGoogleAuthError(err);
         }
       }
 
