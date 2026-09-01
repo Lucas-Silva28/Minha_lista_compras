@@ -1,1 +1,12 @@
-{"version":"3.1.10","date":"2026-08-31","notes":"Correção real do login Google: signInWithPopup/signOut/doc/getDoc/setDoc/ref/uploadString/getDownloadURL agora são expostos em window pelo módulo Firebase (estavam presos ao escopo do <script type=\"module\">, causando 'signInWithPopup is not defined'). Adicionado fallback automático signInWithPopup -> signInWithRedirect para popup bloqueado (Chrome mobile/PWA instalado). Cache do service worker renovado."}
+{
+  "version": "3.2.8",
+  "date": "2026-08-31",
+  "mandatory": false,
+  "notes": "Correção da categoria na edição de produtos.",
+  "changelog": [
+    "Removido o campo de categoria duplicado da edição.",
+    "A categoria agora usa um único campo funcional na área inferior da edição.",
+    "O campo de categoria permanece editável independentemente da oferta.",
+    "Preservadas as demais funções da v3.2.7."
+  ]
+}
