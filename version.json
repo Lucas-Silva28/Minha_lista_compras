@@ -1,12 +1,23 @@
 {
-  "version": "3.2.8",
-  "date": "2026-08-31",
+  "version": "3.3.5",
+  "date": "2026-09-03",
   "mandatory": false,
-  "notes": "Correção da categoria na edição de produtos.",
+  "notes": "Exclusão segura de categorias com confirmação da quantidade de produtos e exclusão conjunta, sem mover produtos para outras categorias.",
   "changelog": [
-    "Removido o campo de categoria duplicado da edição.",
-    "A categoria agora usa um único campo funcional na área inferior da edição.",
-    "O campo de categoria permanece editável independentemente da oferta.",
-    "Preservadas as demais funções da v3.2.7."
+    "Exclusão de categoria agora informa quantos produtos serão excluídos.",
+    "Produtos da categoria excluída são removidos junto com ela e nunca são movidos para outra categoria.",
+    "Listas salvas são atualizadas para não manter produtos da categoria apagada.",
+    "Atualização profissional com version.json + Service Worker e confirmação manual.",
+    "A nova versão permanece em WAITING até o usuário tocar em Atualizar agora.",
+    "Mais tarde mantém a versão atual e o aviso volta na próxima entrada.",
+    "Nova navegação inferior: Minha lista, Minhas compras e Configurações.",
+    "Configurações e Minhas compras agora ocupam toda a tela no celular.",
+    "Avatar Google usa photoURL quando disponível e inicial quando não houver foto.",
+    "Dados locais, histórico, perfil e sincronização Firebase continuam separados por UID.",
+    "Modo offline: alterações feitas sem internet permanecem na chave local da conta e são enviadas somente para o mesmo UID quando a conexão retornar.",
+    "Gerenciamento de categorias permite excluir categorias sem apagar produtos; produtos são movidos para uma categoria restante.",
+    "Gráfico de gastos por categoria aparece abaixo do limite e ordena do maior para o menor gasto.",
+    "Preço, produto e quantidade do Adicionar rapidamente ficam uniformes; Adicionar produto e Limpar campos ficam em coluna.",
+    "Avatar selecionado no Meu Perfil aparece na bolinha ao lado de Temas; foto da conta Google permanece somente na área da conta."
   ]
 }
